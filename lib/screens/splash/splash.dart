@@ -15,7 +15,7 @@ class _SplashState extends State<Splash> {
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
       if (mounted) {
-        Navigator.push(context, AppRoutes.home);
+        Navigator.push(context, AppRoutes.onboarding1);
       }
     });
   }

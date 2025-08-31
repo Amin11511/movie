@@ -26,6 +26,7 @@ flutter:
 
   assets:
     - assets/splash/
+    - assets/onboarding/
     - assets/bottom_navigation_bar/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
