@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie/utilities/app_routes.dart';
 import '../../utilities/app_assets.dart';
 import '../../utilities/app_colors.dart';
 
@@ -153,7 +154,7 @@ class _OnBoardingState extends State<OnBoarding> {
                                         curve: Curves.easeInOut,
                                       );
                                     } else {
-                                      // Navigate to main screen or finish onboarding
+                                      Navigator.push(context, AppRoutes.login);
                                     }
                                   },
                                   style: ElevatedButton.styleFrom(

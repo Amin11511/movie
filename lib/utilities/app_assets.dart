@@ -18,4 +18,21 @@ abstract final class AppAssets {
   static const String gradiant5 = 'assets/onboarding/g5.png';
   static const String onBoarding6 = 'assets/onboarding/ob6.png';
   static const String gradiant6 = 'assets/onboarding/g6.png';
+
+  static const String logo = 'assets/logo.png';
+
+  static const String emailIc = 'assets/login/email_ic.png';
+  static const String passIc = 'assets/login/pass_ic.png';
+  static const String passPostIc = 'assets/login/pass_post_ic.png';
+  static const String googleIc = 'assets/login/google_ic.png';
+  static const String ar = 'assets/login/EG.png';
+  static const String en = 'assets/login/LR.png';
+
+  static const String avatarMeddle = 'assets/register/avatar_meddle.png';
+  static const String avatarLeft = 'assets/register/avatar_left.png';
+  static const String avatarRight = 'assets/register/avatar_right.png';
+  static const String phoneIc = 'assets/register/phone_ic.png';
+  static const String usernameIc = 'assets/register/username_ic.png';
+
+  static const String forgetPassword = 'assets/forget_password/forget_password.png';
 }
