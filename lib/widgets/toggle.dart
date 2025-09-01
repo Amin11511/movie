@@ -29,7 +29,7 @@ class _LanguageToggleState extends State<LanguageToggle> {
               isSelected[i] = i == index;
             }
           });
-          print(index == 0 ? "English selected" : "Arabic selected");
+          // print(index == 0 ? "English selected" : "Arabic selected");
         },
         renderBorder: false, // نخليه إحنا manually
         fillColor: Colors.transparent,

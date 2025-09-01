@@ -34,5 +34,7 @@ abstract final class AppAssets {
   static const String phoneIc = 'assets/register/phone_ic.png';
   static const String usernameIc = 'assets/register/username_ic.png';
 
-  static const String forgetPassword = 'assets/forget_password/forget_password.png';
+  static const String forgetPassword =
+      'assets/forget_password/forget_password.png';
+  static const String empty = 'assets/empty_search/empty.png';
 }
