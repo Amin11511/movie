@@ -44,7 +44,7 @@ class _HomeState extends State<Home> {
 
   Widget buildBottomNavigationBar() {
     return BottomNavigationBar(
-      backgroundColor: AppColor.black,
+      backgroundColor: AppColor.grey,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: AppColor.yellow,
       unselectedItemColor: AppColor.white,

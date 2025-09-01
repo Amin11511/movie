@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie/cubit/movies_cubit.dart';
 
+import '../../../../utilities/app_colors.dart';
+
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
 
@@ -82,6 +84,7 @@ class HomeTab extends StatelessWidget {
                           child: Text(
                             genre,
                             style: const TextStyle(
+                              color: AppColor.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),

@@ -5,9 +5,13 @@ import 'package:movie/movies_dm/movi_model.dart';
 class MoviesService {
   final String baseUrl = 'https://yts.mx/api/v2/list_movies.json';
 
-  Future<List<MovieModel>> fetchMovies() async {
+  Future<List<MovieModel>> fetchMovies({String? genre}) async {
     try {
-      final response = await http.get(Uri.parse(baseUrl));
+      final url = genre == null
+          ? baseUrl
+          : '$baseUrl?genre=$genre';
+
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -20,6 +24,7 @@ class MoviesService {
       throw Exception('Error fetching movies: $e');
     }
   }
+
 
   // Search by title
   Future<List<MovieModel>> searchMovies(String query) async {
