@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie/cubit/search_cubit.dart';
 import 'package:movie/screens/home_screen/tabs/browse_tab/browse_tab.dart';
 import 'package:movie/screens/home_screen/tabs/home_tab/home_tab.dart';
 import 'package:movie/screens/home_screen/tabs/profile_tab/profile_tab.dart';
 import 'package:movie/screens/home_screen/tabs/search_tab/search_tab.dart';
+import 'package:movie/services/movies_service.dart';
 import '../../utilities/app_assets.dart';
 import '../../utilities/app_colors.dart';
 
@@ -17,11 +20,14 @@ class _HomeState extends State<Home> {
   int selectedIndex = 0;
 
   List<Widget> get tabs => [
-    HomeTab(),
-    SearchTab(),
-    BrowseTab(),
-    ProfileTab(),
-  ];
+  HomeTab(),
+  BlocProvider(
+    create: (_) => SearchCubit(MoviesService()),
+    child: SearchTab(),
+  ),
+  BrowseTab(),
+  ProfileTab(),
+];
 
   @override
   Widget build(BuildContext context) {
