@@ -31,10 +31,10 @@ flutter:
   assets:
     - assets/
     - assets/splash/
-    # - assets/login/
-    # - assets/register/
+    - assets/login/
+    - assets/register/
     - assets/onboarding/
-    # - assets/forget_password/
+    - assets/forget_password/
     - assets/bottom_navigation_bar/
     - assets/empty_search/empty.png
 
