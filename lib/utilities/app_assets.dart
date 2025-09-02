@@ -37,4 +37,9 @@ abstract final class AppAssets {
   static const String forgetPassword =
       'assets/forget_password/forget_password.png';
   static const String empty = 'assets/empty_search/empty.png';
+
+  static const String avatar = 'assets/profile/avatar.png';
+  static const String exit = 'assets/profile/exit.png';
+  static const String list = 'assets/profile/list.png';
+  static const String history = 'assets/profile/history.png';
 }

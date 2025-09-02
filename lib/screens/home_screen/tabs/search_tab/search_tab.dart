@@ -13,7 +13,7 @@ class SearchTab extends StatelessWidget {
     final searchCubit = context.read<SearchCubit>();
 
     return Scaffold(
-      backgroundColor: AppColor.grey,
+      backgroundColor: AppColor.black,
       body: SafeArea(
         child: Column(
           children: [
