@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:movie/utilities/app_routes.dart';
 import '../utilities/app_colors.dart';
 
 class AppElevationBottom extends StatelessWidget {
-  const AppElevationBottom({super.key, required this.type, this.color, this.textColor, this.prefixIcon});
+  const AppElevationBottom({
+    super.key,
+    required this.type,
+    this.color,
+    this.textColor,
+    this.prefixIcon,
+    this.onPressed,
+  });
 
   final String type;
   final Color? color;
   final Color? textColor;
   final String? prefixIcon;
+  final VoidCallback? onPressed;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(context, AppRoutes.home);
-        },
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: color ?? AppColor.yellow,
           foregroundColor: Colors.black,

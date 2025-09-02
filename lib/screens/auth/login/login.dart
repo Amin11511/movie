@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie/utilities/app_routes.dart';
+import '../../../services/auth_service.dart';
+import '../../../user_dm/user_model.dart';
 import '../../../utilities/app_assets.dart';
 import '../../../utilities/app_colors.dart';
 import '../../../widgets/app_elevation_bottom.dart';
@@ -7,8 +9,39 @@ import '../../../widgets/app_text_form_field.dart';
 import '../../../widgets/google_elevation_bottom.dart';
 import '../../../widgets/toggle.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final AuthService authService = AuthService();
+
+  bool isLoading = false;
+
+  void handleLogin() async {
+    setState(() => isLoading = true);
+    try {
+      final user = await authService.login(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      Navigator.pushReplacement(context, AppRoutes.home);
+
+    } catch (e) {
+      print("Login error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Login failed, please try again")),
+      );
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +59,24 @@ class Login extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                AppTextFormField(prefixIcon: AppAssets.emailIc, type: "Email"),
+                AppTextFormField(
+                    prefixIcon: AppAssets.emailIc,
+                    type: "Email",
+                    controller: emailController,
+                ),
                 AppTextFormField(
                   type: "Password",
                   prefixIcon: AppAssets.passPostIc,
                   suffixIcon: AppAssets.passIc,
+                  controller: passwordController,
+                  obscureText: true,
+                ),
+                SizedBox(height: 10,),
+                isLoading
+                    ? const CircularProgressIndicator(color: AppColor.yellow)
+                    : AppElevationBottom(
+                  type: "Login",
+                  onPressed: handleLogin,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -55,7 +101,6 @@ class Login extends StatelessWidget {
                     ),
                   ],
                 ), // Forget Password
-                AppElevationBottom(type: "Login"),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Row(

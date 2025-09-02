@@ -1,8 +1,10 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-
+import 'package:carousel_slider/carousel_slider.dart';
+import '../../../services/auth_service.dart';
+import '../../../user_dm/user_model.dart';
 import '../../../utilities/app_assets.dart';
 import '../../../utilities/app_colors.dart';
+import '../../../utilities/app_routes.dart';
 import '../../../widgets/app_elevation_bottom.dart';
 import '../../../widgets/app_text_form_field.dart';
 import '../../../widgets/toggle.dart';
@@ -17,11 +19,61 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   int _currentIndex = 1;
 
+  // Controllers
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+
+  final AuthService authService = AuthService();
+
   final List<String> avatars = [
     AppAssets.avatarLeft,
     AppAssets.avatarMeddle,
     AppAssets.avatarRight,
   ];
+
+  bool isLoading = false;
+
+  void handleRegister() async {
+    if (passwordController.text != confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Passwords do not match")),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      UserDm user = await authService.register(
+        name: nameController.text,
+        email: emailController.text,
+        password: passwordController.text,
+        confirmPassword: confirmPasswordController.text,
+        phone: phoneController.text,
+        avaterId: _currentIndex,
+      );
+
+      print("User registered: ${user.name}, email: ${user.email}");
+
+      // بعد نجاح التسجيل، الانتقال للشاشة الرئيسية
+      Navigator.pushReplacement(context, AppRoutes.home);
+
+    } catch (e) {
+      print("Register error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Register failed")),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,21 +82,18 @@ class _RegisterState extends State<Register> {
       backgroundColor: AppColor.black,
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            // Header
             Padding(
               padding: const EdgeInsets.only(top: 36.0),
               child: Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.arrow_back),
+                    icon: const Icon(Icons.arrow_back),
                     color: AppColor.yellow,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                    onPressed: () => Navigator.pop(context),
                   ),
-                  Expanded(
+                  const Expanded(
                     child: Center(
                       child: Text(
                         "Register",
@@ -56,10 +105,11 @@ class _RegisterState extends State<Register> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 48),
+                  const SizedBox(width: 48),
                 ],
               ),
             ),
+            // Avatar carousel
             Column(
               children: [
                 Padding(
@@ -73,10 +123,7 @@ class _RegisterState extends State<Register> {
                         curve: Curves.easeInOut,
                         child: CircleAvatar(
                           backgroundImage: AssetImage(avatars[index]),
-                          radius: isSelected
-                              ? height *
-                                    0.09 //
-                              : height * 0.06,
+                          radius: isSelected ? height * 0.09 : height * 0.06,
                         ),
                       );
                     },
@@ -87,24 +134,17 @@ class _RegisterState extends State<Register> {
                       enableInfiniteScroll: false,
                       viewportFraction: 0.4,
                       onPageChanged: (index, reason) {
-                        setState(() {
-                          _currentIndex = index;
-                        });
+                        setState(() => _currentIndex = index);
                       },
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Avatar", style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16, color: AppColor.white),)
-                    ],
-                  ),
-                ),
+                const SizedBox(height: 8),
+                const Text("Avatar",
+                    style: TextStyle(fontSize: 16, color: AppColor.white)),
               ],
             ),
+            // Form fields
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -112,67 +152,64 @@ class _RegisterState extends State<Register> {
                   AppTextFormField(
                     prefixIcon: AppAssets.usernameIc,
                     type: "Name",
+                    controller: nameController,
                   ),
                   AppTextFormField(
-                    type: "Email",
                     prefixIcon: AppAssets.emailIc,
+                    type: "Email",
+                    controller: emailController,
                   ),
                   AppTextFormField(
+                    prefixIcon: AppAssets.passIc,
+                    suffixIcon: AppAssets.passPostIc,
                     type: "Password",
-                    prefixIcon: AppAssets.passIc,
-                    suffixIcon: AppAssets.passPostIc,
+                    controller: passwordController,
                   ),
                   AppTextFormField(
-                    type: "Confirm Password",
                     prefixIcon: AppAssets.passIc,
                     suffixIcon: AppAssets.passPostIc,
+                    type: "Confirm Password",
+                    controller: confirmPasswordController,
                   ),
                   AppTextFormField(
                     prefixIcon: AppAssets.phoneIc,
                     type: "Phone Number",
+                    controller: phoneController,
                   ),
+                  // Create Account Button
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: AppElevationBottom(type: "Create Account"),
-                  ), // Create Account Bottom
+                    child: isLoading
+                        ? const CircularProgressIndicator()
+                        : AppElevationBottom(
+                      type: "Create Account",
+                      onPressed: handleRegister,
+                    ),
+                  ),
+
+                  // Login link
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Column(
-                          children: [
-                            Text(
-                              "Already Have Account? ",
+                        const Text("Already Have Account? ",
+                            style:
+                            TextStyle(fontSize: 14, color: AppColor.white)),
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: const Text("Login",
                               style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 14,
-                                color: AppColor.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColor.yellow,
-                                ),
-                              ),
-                            ),
-                          ],
+                                  color: AppColor.yellow)),
                         ),
                       ],
                     ),
                   ),
-                  LanguageToggle(), //Back to Login
+
+                  // Language Toggle
+                  LanguageToggle(),
                 ],
               ),
             ),
