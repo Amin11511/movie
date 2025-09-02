@@ -47,10 +47,10 @@ class _BrowseTabState extends State<BrowseTab> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColor.black,
-        body: Column(
+    return Scaffold(
+      backgroundColor: AppColor.black,
+      body: SafeArea(
+        child: Column(
           children: [
             // Genres Chips
             Container(

@@ -1,10 +1,201 @@
 import 'package:flutter/material.dart';
+import 'package:movie/utilities/app_assets.dart';
+import 'package:movie/utilities/app_colors.dart';
 
-class ProfileTab extends StatelessWidget {
+class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
 
   @override
+  State<ProfileTab> createState() => _ProfileTabState();
+}
+
+class _ProfileTabState extends State<ProfileTab> {
+  int selectedIndex = 0;
+  
+  @override
   Widget build(BuildContext context) {
-    return const Placeholder(color: Colors.green,);
+
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColor.grey,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  children: [
+                    SizedBox(height: 35,),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image(image: AssetImage(AppAssets.avatar), width: 120, height: 120,),
+                                SizedBox(height: 15),
+                                Text("John Safwat", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColor.white)),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("21", style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: AppColor.white),),
+                                SizedBox(height: 20),
+                                Text("Wish List", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColor.white),),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("10", style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: AppColor.white),),
+                                SizedBox(height: 20),
+                                Text("History", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColor.white),),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 60,
+                            child: ElevatedButton(
+                                onPressed: (){},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColor.yellow,
+                                foregroundColor: Colors.black,
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15), side: BorderSide(color: AppColor.black, width: 2)),
+                                elevation: 0,),
+                                child: Text("Edit Profile", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColor.black),),
+                            ),
+                          ),
+                          SizedBox(width: 10,),
+                          Expanded(
+                            flex: 40,
+                            child: ElevatedButton(
+                              onPressed: (){},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColor.red,
+                                foregroundColor: Colors.black,
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15), side: BorderSide(color: AppColor.black, width: 2)),
+                                elevation: 0,),
+                              child: Image(image: AssetImage(AppAssets.exit)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedIndex = 0;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: selectedIndex == 0 ? AppColor.yellow : Colors.transparent,
+                                      width: 2, // سُمك الخط
+                                    ),
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image(image: AssetImage(AppAssets.list)),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      "Watch List",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.normal,
+                                        color: AppColor.white,
+                                      ),
+                                    ),
+                                    SizedBox(height: 16,),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedIndex = 1;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: selectedIndex == 1 ? AppColor.yellow : Colors.transparent,
+                                      width: 2,
+                                    ),
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image(image: AssetImage(AppAssets.history)),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      "History",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.normal,
+                                        color: AppColor.white,
+                                      ),
+                                    ),
+                                    SizedBox(height: 16,),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Image(image: AssetImage(AppAssets.empty)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
