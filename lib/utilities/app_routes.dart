@@ -3,6 +3,7 @@ import 'package:movie/screens/auth/forget_password/forget_password.dart';
 import 'package:movie/screens/auth/register/register.dart';
 import '../screens/auth/login/login.dart';
 import '../screens/home_screen/home.dart';
+import '../screens/home_screen/update_profile/update_profile.dart';
 import '../screens/onboarding/onboarding.dart';
 import '../screens/onboarding/onboarding1.dart';
 import '../screens/onboarding/onboarding2.dart';
@@ -17,4 +18,5 @@ abstract final class AppRoutes{
   static Route get login => MaterialPageRoute(builder: (_) => Login());
   static Route get register => MaterialPageRoute(builder: (_) => Register());
   static Route get forgetPassword => MaterialPageRoute(builder: (_) => ForgetPassword());
+  static Route get updateProfile => MaterialPageRoute(builder: (_) => UpdateProfile());
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie/utilities/app_assets.dart';
 import 'package:movie/utilities/app_colors.dart';
+import 'package:movie/utilities/app_routes.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
@@ -75,7 +76,9 @@ class _ProfileTabState extends State<ProfileTab> {
                           Expanded(
                             flex: 60,
                             child: ElevatedButton(
-                                onPressed: (){},
+                                onPressed: (){
+                                  Navigator.push(context, AppRoutes.updateProfile);
+                                },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColor.yellow,
                                 foregroundColor: Colors.black,
