@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie/user_dm/user_model.dart';
+import 'package:movie/utilities/app_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/profile_service.dart';
 import '../../../utilities/app_assets.dart';
@@ -65,6 +66,31 @@ class _UpdateProfileState extends State<UpdateProfile> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Update failed: $e")),
+      );
+    }
+  }
+
+  void _handleDeleteAccount() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("No token found")),
+      );
+      return;
+    }
+
+    try {
+      final message = await ProfileService().deleteAccount(token);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+
+      // بعد الحذف: خروج أو الرجوع لشاشة تسجيل الدخول
+      Navigator.pushReplacement(context, AppRoutes.login);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
       );
     }
   }
@@ -186,7 +212,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _handleDeleteAccount,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColor.red,
                     foregroundColor: Colors.white,
