@@ -6,11 +6,13 @@ import 'package:movie/screens/home_screen/tabs/home_tab/home_tab.dart';
 import 'package:movie/screens/home_screen/tabs/profile_tab/profile_tab.dart';
 import 'package:movie/screens/home_screen/tabs/search_tab/search_tab.dart';
 import 'package:movie/services/movies_service.dart';
+import '../../user_dm/user_model.dart';
 import '../../utilities/app_assets.dart';
 import '../../utilities/app_colors.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final UserDm user;
+  const Home({super.key, required this.user});
 
   @override
   State<Home> createState() => _HomeState();
@@ -26,7 +28,7 @@ class _HomeState extends State<Home> {
     child: SearchTab(),
   ),
   BrowseTab(),
-  ProfileTab(),
+  ProfileTab(user: widget.user),
 ];
 
   @override

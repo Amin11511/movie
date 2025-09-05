@@ -31,7 +31,7 @@ class _LoginState extends State<Login> {
         password: passwordController.text,
       );
 
-      Navigator.pushReplacement(context, AppRoutes.home);
+      Navigator.pushReplacement(context, AppRoutes.home(user));
 
     } catch (e) {
       print("Login error: $e");
