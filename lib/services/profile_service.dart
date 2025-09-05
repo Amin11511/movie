@@ -32,4 +32,38 @@ class ProfileService {
       throw Exception("Get Profile failed: ${e.response?.data}");
     }
   }
+
+  Future<String> updateProfile({
+    required String token,
+    String? name,
+    String? phone,
+  }) async {
+    try {
+      final response = await _dio.patch(
+        "profile",
+        data: {
+          if (name != null) "name": name,
+          if (phone != null) "phone": phone,
+        },
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ),
+      );
+
+      print("Update Profile response: ${response.data}");
+
+      if (response.statusCode! >= 200 && response.statusCode! < 300) {
+        return response.data["message"] ?? "Profile updated successfully";
+      } else {
+        throw Exception(
+          "Update Profile failed with status ${response.statusCode}: ${response.data}",
+        );
+      }
+    } on DioException catch (e) {
+      print("DioException response data: ${e.response?.data}");
+      throw Exception("Update Profile failed: ${e.response?.data}");
+    }
+  }
 }

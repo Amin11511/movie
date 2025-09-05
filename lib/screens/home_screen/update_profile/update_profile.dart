@@ -37,6 +37,38 @@ class _UpdateProfileState extends State<UpdateProfile> {
     super.dispose();
   }
 
+  Future<void> handleUpdateProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("No token found")),
+      );
+      return;
+    }
+
+    try {
+      final message = await ProfileService().updateProfile(
+        token: token,
+        name: _nameController.text,
+        phone: _phoneController.text,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+
+      // إعادة تحميل بيانات المستخدم بعد التحديث
+      setState(() {
+        _futureUser = _loadUser();
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Update failed: $e")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,7 +213,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: handleUpdateProfile,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColor.yellow,
                     foregroundColor: Colors.white,
