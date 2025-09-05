@@ -42,4 +42,8 @@ abstract final class AppAssets {
   static const String exit = 'assets/profile/exit.png';
   static const String list = 'assets/profile/list.png';
   static const String history = 'assets/profile/history.png';
+
+  static const String bg1 = 'assets/home/bg1.png';
+  static const String bg2 = 'assets/home/bg2.png';
+  static const String bg3 = 'assets/home/bg3.png';
 }
