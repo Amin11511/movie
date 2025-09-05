@@ -19,5 +19,5 @@ abstract final class AppRoutes{
   static Route get login => MaterialPageRoute(builder: (_) => Login());
   static Route get register => MaterialPageRoute(builder: (_) => Register());
   static Route get forgetPassword => MaterialPageRoute(builder: (_) => ForgetPassword());
-  static Route get updateProfile => MaterialPageRoute(builder: (_) => UpdateProfile());
+  static Route updateProfile() => MaterialPageRoute(builder: (_) => const UpdateProfile());
 }

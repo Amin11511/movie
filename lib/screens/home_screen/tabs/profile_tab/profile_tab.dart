@@ -117,7 +117,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                   flex: 60,
                                   child: ElevatedButton(
                                     onPressed: (){
-                                      Navigator.push(context, AppRoutes.updateProfile);
+                                      Navigator.push(context, AppRoutes.updateProfile());
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColor.yellow,
