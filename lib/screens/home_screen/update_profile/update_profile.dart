@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/profile_service.dart';
 import '../../../utilities/app_assets.dart';
 import '../../../utilities/app_colors.dart';
+import '../../auth/forget_password/forget_password.dart';
 
 class UpdateProfile extends StatefulWidget {
   const UpdateProfile({super.key});
@@ -206,6 +207,31 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     ),
                   ),
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.white),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const ForgetPassword()),
+                        );
+                      },
+                      child: const Text(
+                        "Reset Password",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const Spacer(),

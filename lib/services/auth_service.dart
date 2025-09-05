@@ -41,7 +41,6 @@ class AuthService {
     }
   }
 
-
   Future<UserDm> register({
     required String name,
     required String email,
@@ -73,6 +72,40 @@ class AuthService {
     } on DioException catch (e) {
       print("DioException response data: ${e.response?.data}");
       throw Exception("Register failed: ${e.response?.data}");
+    }
+  }
+
+  Future<String> resetPassword({
+    required String token,
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final response = await _dio.patch(
+        "auth/reset-password",
+        data: {
+          "oldPassword": oldPassword,
+          "newPassword": newPassword,
+        },
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+          },
+        ),
+      );
+
+      print("Reset Password response: ${response.data}");
+
+      if (response.statusCode! >= 200 && response.statusCode! < 300) {
+        return response.data["message"] ?? "Password updated successfully";
+      } else {
+        throw Exception(
+          "Reset Password failed with status ${response.statusCode}: ${response.data}",
+        );
+      }
+    } on DioException catch (e) {
+      print("DioException response data: ${e.response?.data}");
+      throw Exception("Reset Password failed: ${e.response?.data}");
     }
   }
 }
