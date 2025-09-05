@@ -66,4 +66,26 @@ class ProfileService {
       throw Exception("Update Profile failed: ${e.response?.data}");
     }
   }
+
+  Future<String> deleteAccount(String token) async {
+    try {
+      final response = await _dio.delete(
+        "profile",
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+      );
+
+      print("Delete Account response: ${response.data}");
+
+      if (response.statusCode! >= 200 && response.statusCode! < 300) {
+        return response.data["message"] ?? "Account deleted successfully";
+      } else {
+        throw Exception(
+          "Delete Account failed with status ${response.statusCode}: ${response.data}",
+        );
+      }
+    } on DioException catch (e) {
+      print("DioException response data: ${e.response?.data}");
+      throw Exception("Delete Account failed: ${e.response?.data}");
+    }
+  }
 }
