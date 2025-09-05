@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/auth_service.dart';
 import '../../../user_dm/user_model.dart';
 import '../../../utilities/app_assets.dart';
@@ -49,7 +50,8 @@ class _RegisterState extends State<Register> {
     });
 
     try {
-      UserDm user = await authService.register(
+      // 1️⃣ عمل تسجيل أولاً
+      await authService.register(
         name: nameController.text,
         email: emailController.text,
         password: passwordController.text,
@@ -58,13 +60,28 @@ class _RegisterState extends State<Register> {
         avaterId: _currentIndex,
       );
 
-      print("User registered: ${user.name}, email: ${user.email}");
+      print("User registered successfully");
 
-      // بعد نجاح التسجيل، الانتقال للشاشة الرئيسية
-      Navigator.pushReplacement(context, AppRoutes.home);
+      // 2️⃣ فوراً بعد التسجيل، اعمل login
+      UserDm user = await authService.login(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      print("User logged in: ${user.name}, email: ${user.email}, token: ${user.token}");
+
+      // 3️⃣ حفظ الـ token في SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString("token", user.token!);
+
+      // 4️⃣ الانتقال للشاشة الرئيسية
+      Navigator.pushReplacement(
+        context,
+        AppRoutes.home(user),
+      );
 
     } catch (e) {
-      print("Register error: $e");
+      print("Register/Login error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Register failed")),
       );

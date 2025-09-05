@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../user_dm/user_model.dart';
 
 
@@ -26,6 +27,9 @@ class AuthService {
       final message = data["message"];
 
       print("Login response: $data");
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString("token", token);
 
       // بنعمل UserDm من الـ token
       return UserDm.fromToken(
