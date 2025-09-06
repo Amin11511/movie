@@ -29,5 +29,29 @@ class MovieDetailsService {
       throw Exception("Unexpected error: $e");
     }
   }
+
+  Future<List<dynamic>> getMovieSuggestions(int movieId) async {
+    final String url = "https://yts.mx/api/v2/movie_suggestions.json";
+
+    try {
+      final response = await _dio.get(url, queryParameters: {
+        "movie_id": movieId,
+      });
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        if (data["status"] == "ok" && data["data"] != null) {
+          return data["data"]["movies"] ?? [];
+        } else {
+          return [];
+        }
+      } else {
+        throw Exception("Failed to load suggestions: ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Error fetching suggestions: $e");
+    }
+  }
 }
 
