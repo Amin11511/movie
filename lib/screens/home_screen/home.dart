@@ -35,50 +35,100 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.grey,
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(child: tabs[selectedIndex]),
+          // المحتوى الرئيسي
+          tabs[selectedIndex],
+
+          // البوتوم نافيجيشن بار العائم
+          Positioned(
+            left: 10,
+            right: 10,
+            bottom: 10,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                color: AppColor.grey,
+                child: BottomNavigationBar(
+                  backgroundColor: AppColor.grey, // عشان Container يظهر
+                  type: BottomNavigationBarType.fixed,
+                  selectedItemColor: AppColor.yellow,
+                  unselectedItemColor: AppColor.white,
+                  iconSize: 25,
+                  showSelectedLabels: false,
+                  showUnselectedLabels: false,
+                  onTap: (index) {
+                    setState(() {
+                      selectedIndex = index;
+                    });
+                  },
+                  currentIndex: selectedIndex,
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: buildBottomNavigationBarIcon(
+                          AppAssets.homeIc, selectedIndex == 0),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: buildBottomNavigationBarIcon(
+                          AppAssets.searchIc, selectedIndex == 1),
+                      label: 'Search',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: buildBottomNavigationBarIcon(
+                          AppAssets.browseIc, selectedIndex == 2),
+                      label: 'Browse',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: buildBottomNavigationBarIcon(
+                          AppAssets.profileIc, selectedIndex == 3),
+                      label: 'Profile',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
-      bottomNavigationBar: buildBottomNavigationBar(),
     );
   }
 
-  Widget buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      backgroundColor: AppColor.grey,
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: AppColor.yellow,
-      unselectedItemColor: AppColor.white,
-      iconSize: 30,
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
-      onTap: (index) {
-        setState(() {
-          selectedIndex = index;
-        });
-      },
-      currentIndex: selectedIndex,
-      items: [
-        BottomNavigationBarItem(
-          icon: buildBottomNavigationBarIcon(AppAssets.homeIc, selectedIndex == 0),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: buildBottomNavigationBarIcon(AppAssets.searchIc, selectedIndex == 1),
-          label: 'Search',
-        ),
-        BottomNavigationBarItem(
-          icon: buildBottomNavigationBarIcon(AppAssets.browseIc, selectedIndex == 2),
-          label: 'Browse',
-        ),
-        BottomNavigationBarItem(
-          icon: buildBottomNavigationBarIcon(AppAssets.profileIc, selectedIndex == 3),
-          label: 'Profile',
-        ),
-      ],
-    );
-  }
+  // Widget buildBottomNavigationBar() {
+  //   return BottomNavigationBar(
+  //     backgroundColor: AppColor.grey,
+  //     type: BottomNavigationBarType.fixed,
+  //     selectedItemColor: AppColor.yellow,
+  //     unselectedItemColor: AppColor.white,
+  //     iconSize: 30,
+  //     showSelectedLabels: false,
+  //     showUnselectedLabels: false,
+  //     onTap: (index) {
+  //       setState(() {
+  //         selectedIndex = index;
+  //       });
+  //     },
+  //     currentIndex: selectedIndex,
+  //     items: [
+  //       BottomNavigationBarItem(
+  //         icon: buildBottomNavigationBarIcon(AppAssets.homeIc, selectedIndex == 0),
+  //         label: 'Home',
+  //       ),
+  //       BottomNavigationBarItem(
+  //         icon: buildBottomNavigationBarIcon(AppAssets.searchIc, selectedIndex == 1),
+  //         label: 'Search',
+  //       ),
+  //       BottomNavigationBarItem(
+  //         icon: buildBottomNavigationBarIcon(AppAssets.browseIc, selectedIndex == 2),
+  //         label: 'Browse',
+  //       ),
+  //       BottomNavigationBarItem(
+  //         icon: buildBottomNavigationBarIcon(AppAssets.profileIc, selectedIndex == 3),
+  //         label: 'Profile',
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget buildBottomNavigationBarIcon(String icon, bool isSelected) {
     return Container(

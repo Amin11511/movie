@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie/cubit/movies_cubit.dart';
-import 'package:movie/screens/home_screen/movie_details_screen/movie_details.dart';
 import 'package:movie/screens/splash/splash.dart';
 import 'package:movie/services/movies_service.dart';
 import 'package:movie/utilities/app_colors.dart';
