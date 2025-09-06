@@ -5,6 +5,8 @@ import '../../../../utilities/app_assets.dart';
 import '../../../../utilities/app_colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import '../../movie_details_screen/movie_details.dart';
+
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
 
@@ -70,43 +72,53 @@ class HomeTab extends StatelessWidget {
                             items: movies.map((movie) {
                               return Builder(
                                 builder: (BuildContext context) {
-                                  return ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          width: double.infinity,
-                                          height: double.infinity,
-                                          color: Colors.grey[200],
-                                          child: Image.network(
-                                            movie.image,
-                                            fit: BoxFit.cover,
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => MovieDetails(movieId: movie.id),
+                                        ),
+                                      );
+                                    },
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Stack(
+                                        children: [
+                                          Container(
                                             width: double.infinity,
                                             height: double.infinity,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 8,
-                                          left: 8,
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                                            decoration: BoxDecoration(
-                                              color: Colors.black.withOpacity(0.7),
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  movie.rating.toString(),
-                                                  style: const TextStyle(color: Colors.white, fontSize: 16),
-                                                ),
-                                                const SizedBox(width: 4),
-                                                const Icon(Icons.star, color: Colors.yellow, size: 16),
-                                              ],
+                                            color: Colors.grey[200],
+                                            child: Image.network(
+                                              movie.image,
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                              height: double.infinity,
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                          Positioned(
+                                            top: 8,
+                                            left: 8,
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                              decoration: BoxDecoration(
+                                                color: Colors.black.withOpacity(0.7),
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    movie.rating.toString(),
+                                                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                                                  ),
+                                                  const SizedBox(width: 4),
+                                                  const Icon(Icons.star, color: Colors.yellow, size: 16),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -168,55 +180,65 @@ class HomeTab extends StatelessWidget {
                               itemCount: genreMovies.length,
                               itemBuilder: (_, index) {
                                 final movie = genreMovies[index];
-                                return Container(
-                                  width: movieWidth,
-                                  margin: const EdgeInsets.all(8),
-                                  child: Column(
-                                    children: [
-                                      Expanded(
-                                        child: Stack(
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius: BorderRadius.circular(16),
-                                              child: Image.network(
-                                                movie.image,
-                                                fit: BoxFit.cover,
-                                                width: double.infinity,
-                                                height: double.infinity,
-                                              ),
-                                            ),
-                                            Positioned(
-                                              top: 8,
-                                              left: 8,
-                                              child: Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black.withOpacity(0.7),
-                                                  borderRadius: BorderRadius.circular(12),
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    Text(
-                                                      movie.rating.toString(),
-                                                      style: const TextStyle(color: Colors.white, fontSize: 16),
-                                                    ),
-                                                    const SizedBox(width: 4),
-                                                    const Icon(Icons.star, color: Colors.yellow, size: 16),
-                                                  ],
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => MovieDetails(movieId: movie.id),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    width: movieWidth,
+                                    margin: const EdgeInsets.all(8),
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: Stack(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius: BorderRadius.circular(16),
+                                                child: Image.network(
+                                                  movie.image,
+                                                  fit: BoxFit.cover,
+                                                  width: double.infinity,
+                                                  height: double.infinity,
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                              Positioned(
+                                                top: 8,
+                                                left: 8,
+                                                child: Container(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black.withOpacity(0.7),
+                                                    borderRadius: BorderRadius.circular(12),
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        movie.rating.toString(),
+                                                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      const Icon(Icons.star, color: Colors.yellow, size: 16),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        movie.title,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: AppColor.white),
-                                      ),
-                                    ],
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          movie.title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(color: AppColor.white),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               },
@@ -238,5 +260,3 @@ class HomeTab extends StatelessWidget {
     );
   }
 }
-
-
