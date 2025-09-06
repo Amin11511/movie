@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie/screens/auth/forget_password/forget_password.dart';
 import 'package:movie/screens/auth/register/register.dart';
+import 'package:movie/screens/home_screen/movie_details_screen/movie_details.dart';
 import '../screens/auth/login/login.dart';
 import '../screens/home_screen/home.dart';
 import '../screens/home_screen/update_profile/update_profile.dart';
@@ -20,4 +21,5 @@ abstract final class AppRoutes{
   static Route get register => MaterialPageRoute(builder: (_) => Register());
   static Route get forgetPassword => MaterialPageRoute(builder: (_) => ForgetPassword());
   static Route updateProfile() => MaterialPageRoute(builder: (_) => const UpdateProfile());
+  static Route get movieDetails => MaterialPageRoute(builder: (_) => MovieDetails());
 }
