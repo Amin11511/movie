@@ -38,6 +38,7 @@ flutter:
     - assets/profile/
     - assets/onboarding/
     - assets/home/
+    - assets/details/
     - assets/forget_password/
     - assets/bottom_navigation_bar/
     - assets/empty_search/empty.png

@@ -34,8 +34,7 @@ abstract final class AppAssets {
   static const String phoneIc = 'assets/register/phone_ic.png';
   static const String usernameIc = 'assets/register/username_ic.png';
 
-  static const String forgetPassword =
-      'assets/forget_password/forget_password.png';
+  static const String forgetPassword = 'assets/forget_password/forget_password.png';
   static const String empty = 'assets/empty_search/empty.png';
 
   static const String avatar = 'assets/profile/avatar.png';
@@ -46,4 +45,12 @@ abstract final class AppAssets {
   static const String bg1 = 'assets/home/bg1.png';
   static const String bg2 = 'assets/home/bg2.png';
   static const String bg3 = 'assets/home/bg3.png';
+
+  static const String movieBg1 = 'assets/details/bg1.png';
+  static const String movieBg2 = 'assets/details/bg2.png';
+  static const String pause = 'assets/details/pause.png';
+  static const String love = 'assets/details/love.png';
+  static const String star = 'assets/details/star.png';
+  static const String time = 'assets/details/time.png';
+  static const String save = 'assets/details/save.png';
 }
