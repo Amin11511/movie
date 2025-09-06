@@ -112,7 +112,7 @@ class MovieDetails extends StatelessWidget {
                     ),
                   ],
                 ), //poster
-                SizedBox(height: 16,),
+                const SizedBox(height: 16,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: ElevatedButton(
@@ -139,7 +139,7 @@ class MovieDetails extends StatelessWidget {
                     ),
                   ),
                 ), //elevation bottom watch
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
@@ -206,7 +206,7 @@ class MovieDetails extends StatelessWidget {
                     ],
                   ),
                 ), // 3 tabs of likes, time , star
-                SizedBox(height: 16,),
+                const SizedBox(height: 16,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
@@ -216,7 +216,7 @@ class MovieDetails extends StatelessWidget {
                     ],
                   ),
                 ), // screenshots text
-                SizedBox(height: 16,),
+                const SizedBox(height: 16,),
                 Column(
                   children: [
                     Padding(
@@ -269,6 +269,7 @@ class MovieDetails extends StatelessWidget {
                     SizedBox(height: 16,),
                   ],
                 ), // 3 image of screenshots
+                const SizedBox(height: 16,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
@@ -278,7 +279,73 @@ class MovieDetails extends StatelessWidget {
                     ],
                   ),
                 ), // similar text
-                SizedBox(height: 16,),
+                FutureBuilder<List<dynamic>>(
+                  future: MovieDetailsService().getMovieSuggestions(movieId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("Error: ${snapshot.error}"));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text("No suggestions found"));
+                    }
+
+                    final suggestions = snapshot.data!;
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: suggestions.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: (MediaQuery.of(context).size.width / 2) / (screenHeight / 3),
+                        ),
+                        itemBuilder: (context, index) {
+                          final movie = suggestions[index];
+                          return Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  image: DecorationImage(
+                                    image: NetworkImage(movie["medium_cover_image"]),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.7),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.star, color: Colors.yellow, size: 16),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        movie["rating"].toString(),
+                                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
@@ -288,7 +355,7 @@ class MovieDetails extends StatelessWidget {
                     ],
                   ),
                 ), // Summary text
-                SizedBox(height: 16,),
+                const SizedBox(height: 16,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
@@ -302,7 +369,7 @@ class MovieDetails extends StatelessWidget {
                     ),
                   )
                 ),
-                SizedBox(height: 16,),
+                const SizedBox(height: 16,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
