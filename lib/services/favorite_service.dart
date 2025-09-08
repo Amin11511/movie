@@ -53,7 +53,10 @@ class FavoriteService {
         "favorites/add",
         data: body,
         options: Options(
-          headers: {"Authorization": "Bearer $token"},
+          headers: {
+            "Authorization": "Bearer $token",
+            "Content-Type": "application/json",
+          },
         ),
       );
 

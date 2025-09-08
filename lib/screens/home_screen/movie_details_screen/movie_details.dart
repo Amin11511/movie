@@ -17,6 +17,28 @@ class MovieDetails extends StatefulWidget {
 class _MovieDetailsState extends State<MovieDetails> {
   bool isFavorite = false;
 
+  @override
+  void initState() {
+    super.initState();
+    checkIfFavorite();
+  }
+
+  Future<void> checkIfFavorite() async {
+    final service = FavoriteService();
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
+    if (token == null) return;
+
+    final favorites = await service.getAllFavorites();
+    final movieIdStr = widget.movieId.toString();
+
+    final exists = favorites.any((fav) => fav.movieId == movieIdStr);
+
+    setState(() {
+      isFavorite = exists;
+    });
+  }
+
   Future<MovieDetailsDm> fetchMovieDetails() async {
     final service = MovieDetailsService();
     return await service.getMovieDetails(widget.movieId);
