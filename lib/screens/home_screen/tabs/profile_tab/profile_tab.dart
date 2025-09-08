@@ -3,6 +3,8 @@ import 'package:movie/utilities/app_assets.dart';
 import 'package:movie/utilities/app_colors.dart';
 import 'package:movie/utilities/app_routes.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../favorites_dm/favorites_movie_dm.dart';
+import '../../../../services/favorite_service.dart';
 import '../../../../services/profile_service.dart';
 import '../../../../user_dm/user_model.dart';
 
@@ -17,11 +19,22 @@ class ProfileTab extends StatefulWidget {
 class _ProfileTabState extends State<ProfileTab> {
   late Future<UserDm> _futureProfile;
   int selectedIndex = 0;
+  late Future<List<FavoriteMovieDm>> _futureFavorites;
+  int favoriteCount = 0;
 
   @override
   void initState() {
     super.initState();
     _futureProfile = _loadProfile();
+    _futureFavorites = FavoriteService().getAllFavorites();
+    _loadFavorites();
+  }
+
+  void _loadFavorites() async {
+    final favorites = await FavoriteService().getAllFavorites();
+    setState(() {
+      favoriteCount = favorites.length;
+    });
   }
 
   Future<UserDm> _loadProfile() async {
@@ -90,7 +103,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("21", style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: AppColor.white),),
+                                      Text(favoriteCount.toString(), style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: AppColor.white),),
                                       SizedBox(height: 20),
                                       Text("Wish List", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColor.white),),
                                     ],
@@ -229,21 +242,95 @@ class _ProfileTabState extends State<ProfileTab> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Image(image: AssetImage(AppAssets.empty)),
-                    ],
+                Expanded(
+                  child: FutureBuilder<List<FavoriteMovieDm>>(
+                    future: FavoriteService().getAllFavorites(), // ✅ هنا الداتا
+                    builder: (context, favSnapshot) {
+                      if (favSnapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      if (favSnapshot.hasError) {
+                        return Center(child: Text("Error: ${favSnapshot.error}"));
+                      }
+
+                      final favorites = favSnapshot.data ?? [];
+
+                      if (favorites.isEmpty) {
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Image.asset(AppAssets.empty),
+                          ),
+                        );
+                      }
+
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GridView.builder(
+                          itemCount: favorites.length,
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.7,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                          ),
+                          itemBuilder: (context, index) {
+                            final movie = favorites[index];
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                image: DecorationImage(
+                                  image: NetworkImage(movie.imageURL),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    bottom: 8,
+                                    right: 8,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black54,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                            size: 16,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            movie.rating.toString(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
             );
           }
-
-          // fallback
           return const Center(child: Text("No user data"));
         },
       ),
