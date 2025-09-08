@@ -23,20 +23,22 @@ class _LoginState extends State<Login> {
 
   bool isLoading = false;
 
-  void handleLogin() async {
+  Future<void> handleLogin() async {
     setState(() => isLoading = true);
     try {
-      final user = await authService.login(
+      final UserDm user = await authService.login(
         email: emailController.text,
         password: passwordController.text,
       );
 
-      Navigator.pushReplacement(context, AppRoutes.home(user));
+      // لو وصلنا هنا يبقى التوكين اتخزن في SharedPreferences من جوه AuthService
+      debugPrint("User logged in: ${user.email}, token: ${user.token}");
 
+      Navigator.pushReplacement(context, AppRoutes.home(user));
     } catch (e) {
-      print("Login error: $e");
+      debugPrint("Login error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login failed, please try again")),
+        const SnackBar(content: Text("Login failed, please try again")),
       );
     } finally {
       setState(() => isLoading = false);
@@ -53,16 +55,16 @@ class _LoginState extends State<Login> {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 48, bottom: 50),
-            child: Image(image: AssetImage(AppAssets.logo)),
+            child: const Image(image: AssetImage(AppAssets.logo)),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
                 AppTextFormField(
-                    prefixIcon: AppAssets.emailIc,
-                    type: "Email",
-                    controller: emailController,
+                  prefixIcon: AppAssets.emailIc,
+                  type: "Email",
+                  controller: emailController,
                 ),
                 AppTextFormField(
                   type: "Password",
@@ -71,7 +73,7 @@ class _LoginState extends State<Login> {
                   controller: passwordController,
                   obscureText: true,
                 ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10),
                 isLoading
                     ? const CircularProgressIndicator(color: AppColor.yellow)
                     : AppElevationBottom(
@@ -87,7 +89,7 @@ class _LoginState extends State<Login> {
                         onTap: () {
                           Navigator.push(context, AppRoutes.forgetPassword);
                         },
-                        child: Text(
+                        child: const Text(
                           "Forget Password?",
                           style: TextStyle(
                             color: AppColor.yellow,
@@ -106,34 +108,26 @@ class _LoginState extends State<Login> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Column(
-                        children: [
-                          Text(
-                            "Don't Have Account? ",
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 14,
-                              color: AppColor.white,
-                            ),
-                          ),
-                        ],
+                      const Text(
+                        "Don't Have Account? ",
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 14,
+                          color: AppColor.white,
+                        ),
                       ),
-                      Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(context, AppRoutes.register);
-                            },
-                            child: Text(
-                              "Create One",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: AppColor.yellow,
-                              ),
-                            ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, AppRoutes.register);
+                        },
+                        child: const Text(
+                          "Create One",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.yellow,
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
@@ -143,19 +137,38 @@ class _LoginState extends State<Login> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(child: Divider(color: AppColor.yellow, indent: 26, endIndent: 16,)),
-                      Text("OR",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColor.yellow),
+                      const Expanded(
+                          child: Divider(
+                            color: AppColor.yellow,
+                            indent: 26,
+                            endIndent: 16,
+                          )),
+                      const Text(
+                        "OR",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: AppColor.yellow,
                         ),
-                      Expanded(child: Divider(color: AppColor.yellow, indent: 16, endIndent: 26,)),
+                      ),
+                      const Expanded(
+                          child: Divider(
+                            color: AppColor.yellow,
+                            indent: 16,
+                            endIndent: 26,
+                          )),
                     ],
                   ),
                 ), // OR
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24.0),
-                  child: GoogleElevationBottom(type: "Login With Google", textColor: AppColor.black, prefixIcon: AppAssets.googleIc,),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 24.0),
+                  child: GoogleElevationBottom(
+                    type: "Login With Google",
+                    textColor: AppColor.black,
+                    prefixIcon: AppAssets.googleIc,
+                  ),
                 ), // Login with Google
-                LanguageToggle(),
+                const LanguageToggle(),
               ],
             ),
           ),

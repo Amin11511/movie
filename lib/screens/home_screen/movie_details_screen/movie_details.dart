@@ -1,17 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:movie/utilities/app_assets.dart';
 import 'package:movie/utilities/app_colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../movie_details_dm/movie_details_dm.dart';
+import '../../../services/favorite_service.dart';
 import '../../../services/movie_details_service.dart';
 
-class MovieDetails extends StatelessWidget {
+class MovieDetails extends StatefulWidget {
   final int movieId;
   const MovieDetails({super.key, required this.movieId});
 
+  @override
+  State<MovieDetails> createState() => _MovieDetailsState();
+}
+
+class _MovieDetailsState extends State<MovieDetails> {
+  bool isFavorite = false;
+
   Future<MovieDetailsDm> fetchMovieDetails() async {
     final service = MovieDetailsService();
-    return await service.getMovieDetails(movieId);
+    return await service.getMovieDetails(widget.movieId);
   }
+
+  Future<void> toggleFavorite(MovieDetailsData movie) async {
+    final service = FavoriteService();
+
+    // جلب التوكين للتأكد من تسجيل الدخول
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
+
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("يجب تسجيل الدخول أولاً")),
+      );
+      return;
+    }
+
+    bool success = false;
+
+    if (isFavorite) {
+      // ✅ إزالة من المفضلة باستخدام DELETE API الجديد
+      success = await service.removeFromFavorite(movie.id.toString());
+      if (success) {
+        setState(() => isFavorite = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("تمت الإزالة من المفضلة")),
+        );
+      }
+    } else {
+      // ❤️ إضافة إلى المفضلة كما كانت
+      success = await service.addToFavorite(movie);
+      if (success) {
+        setState(() => isFavorite = true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("تمت الإضافة إلى المفضلة")),
+        );
+      }
+    }
+
+    if (!success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("فشل في العملية")),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -54,15 +107,25 @@ class MovieDetails extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 16),
                       child: Row(
                         children: [
                           GestureDetector(
                             onTap: () => Navigator.pop(context),
-                            child: const Icon(Icons.arrow_back_ios, color: AppColor.white),
+                            child: const Icon(Icons.arrow_back_ios,
+                                color: AppColor.white),
                           ),
                           const Spacer(),
-                          Image(image: AssetImage(AppAssets.save)),
+                          GestureDetector(
+                            onTap: () async {
+                              await toggleFavorite(movie);
+                            },
+                            child: Icon(
+                              Icons.favorite,
+                              color: isFavorite ? Colors.red : AppColor.white,
+                              size: 28,
+                            ),
+                          ),
                           const SizedBox(width: 6),
                         ],
                       ),
@@ -280,7 +343,7 @@ class MovieDetails extends StatelessWidget {
                   ),
                 ), // similar text
                 FutureBuilder<List<dynamic>>(
-                  future: MovieDetailsService().getMovieSuggestions(movieId),
+                  future: MovieDetailsService().getMovieSuggestions(widget.movieId),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());

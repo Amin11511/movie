@@ -21,7 +21,7 @@ class UserDm {
     this.token,
   });
 
-  /// factory من JSON object (زي register response)
+  /// factory من JSON object (زي register response أو get profile)
   factory UserDm.fromJson(Map<String, dynamic> json) {
     return UserDm(
       id: json["_id"] ?? "",
@@ -36,21 +36,17 @@ class UserDm {
       updatedAt: json["updatedAt"] != null
           ? DateTime.tryParse(json["updatedAt"])
           : null,
+      token: json["token"], // لو جاي مع الداتا
     );
   }
 
-  /// factory من token string (زي login response)
-  factory UserDm.fromToken(
-      String token, {
-        required String email,
-        String id = "",
-        String name = "",
-      }) {
+  /// factory مخصوص للـ login response
+  factory UserDm.fromLoginJson(Map<String, dynamic> json, {String email = ""}) {
     return UserDm(
-      id: id,
-      name: name,
-      email: email,
-      token: token,
+      id: "", // مش بييجي من login
+      name: "", // مش بييجي من login
+      email: email, // نمرره إحنا من الفورم أو من مكان التخزين
+      token: json["data"], // التوكين
     );
   }
 
