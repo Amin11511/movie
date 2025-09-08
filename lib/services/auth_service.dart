@@ -23,19 +23,18 @@ class AuthService {
     if (response.statusCode == 200 && response.statusCode! < 300) {
       final data = response.data;
 
-      final token = data["data"];
-      final message = data["message"];
-
       print("Login response: $data");
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString("token", token);
+      // استخدم الـ factory الجديد
+      final user = UserDm.fromLoginJson(data, email: email);
 
-      // بنعمل UserDm من الـ token
-      return UserDm.fromToken(
-        token,
-        email: email,
-      );
+      // نخزن التوكين في SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      if (user.token != null) {
+        await prefs.setString("token", user.token!);
+      }
+
+      return user;
     } else {
       throw Exception("Login failed");
     }
