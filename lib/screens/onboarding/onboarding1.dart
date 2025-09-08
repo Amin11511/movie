@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movie/utilities/app_assets.dart';
-
 import '../../utilities/app_colors.dart';
 import '../../utilities/app_routes.dart';
 
@@ -15,20 +14,20 @@ class Onboarding1 extends StatelessWidget {
             Container(
               height: MediaQuery.of(
                 context,
-              ).size.height, // ياخد طول الشاشة كله
+              ).size.height,
               width: double.infinity,
               color:
-              Colors.black, // لون للخلفية (ممكن تغيره أو تخليه شفاف)
+              Colors.black,
               child: Align(
-                alignment: Alignment.topCenter, // الصورة تبدأ من فوق
+                alignment: Alignment.topCenter,
                 child: Container(
                   height:
-                  MediaQuery.of(context).size.height, // 80% من طول الشاشة
+                  MediaQuery.of(context).size.height,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage(AppAssets.onBoarding1),
-                      fit: BoxFit.fill,
+                      fit: BoxFit.contain,
                     ),
                   ),
                   child: Container(
@@ -71,7 +70,7 @@ class Onboarding1 extends StatelessWidget {
                           child: Text(
                             "Find Your Next Favorite Movie Here",
                             style: TextStyle(
-                              fontSize: 36,
+                              fontSize: MediaQuery.of(context).size.width * 0.09,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
@@ -83,7 +82,7 @@ class Onboarding1 extends StatelessWidget {
                             child: Text(
                               "Get access to a huge library of movies to suit all tastes. You will surely like it.",
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: MediaQuery.of(context).size.width * 0.04,
                                 color: Colors.white.withOpacity(0.6),
                                 fontWeight: FontWeight.normal,
                               ),
@@ -98,9 +97,9 @@ class Onboarding1 extends StatelessWidget {
                             },
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(double.infinity, 50),
-                              backgroundColor: AppColor.yellow, // اللون الأصفر
+                              backgroundColor: AppColor.yellow,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16), // الحواف راوندد 16
+                                borderRadius: BorderRadius.circular(16),
                               ),
                             ),
                             child: Text(
@@ -108,7 +107,7 @@ class Onboarding1 extends StatelessWidget {
                               style: TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w800,
-                                fontSize: 20,
+                                fontSize: MediaQuery.of(context).size.width * 0.05,
                               ),
                             ),
                           ),

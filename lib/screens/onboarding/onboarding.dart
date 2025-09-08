@@ -124,7 +124,7 @@ class _OnBoardingState extends State<OnBoarding> {
                                 child: Text(
                                   texts1[index],
                                   style: TextStyle(
-                                    fontSize: 24,
+                                    fontSize: MediaQuery.of(context).size.width * 0.07,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
@@ -136,14 +136,13 @@ class _OnBoardingState extends State<OnBoarding> {
                                 child: Text(
                                   texts2[index],
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: MediaQuery.of(context).size.width * 0.05,
                                     color: Colors.white,
                                     fontWeight: FontWeight.normal,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
-                              // زرار التالي دائماً
                               Padding(
                                 padding: const EdgeInsets.only(top: 10),
                                 child: ElevatedButton(
@@ -169,7 +168,7 @@ class _OnBoardingState extends State<OnBoarding> {
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w800,
-                                      fontSize: 20,
+                                      fontSize: MediaQuery.of(context).size.width * 0.05,
                                     ),
                                   ),
                                 ),
@@ -188,21 +187,21 @@ class _OnBoardingState extends State<OnBoarding> {
                                     },
                                     style: ElevatedButton.styleFrom(
                                       minimumSize: Size(double.infinity, 50),
-                                      backgroundColor: AppColor.black, // خلفية سوداء
+                                      backgroundColor: AppColor.black,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16), // الحواف مدورة 16
+                                        borderRadius: BorderRadius.circular(16),
                                         side: BorderSide(
-                                          color: AppColor.yellow, // لون الخط أصفر
-                                          width: 1, // سمك الخط 2 بيكسل
+                                          color: AppColor.yellow,
+                                          width: 1,
                                         ),
                                       ),
                                     ),
                                     child: Text(
                                       "Back",
                                       style: TextStyle(
-                                        color: Colors.white, // نص أبيض
+                                        color: Colors.white,
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 18,
+                                        fontSize: MediaQuery.of(context).size.width * 0.04,
                                       ),
                                     ),
                                   ),
