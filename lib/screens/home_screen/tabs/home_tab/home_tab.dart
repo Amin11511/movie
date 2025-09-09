@@ -58,8 +58,7 @@ class HomeTab extends StatelessWidget {
                             ),
                           ],
                         ),
-
-                        // Carousel فوق الخلفية
+                        // Carousel
                         Align(
                           alignment: Alignment.center,
                           child: CarouselSlider(
@@ -129,15 +128,12 @@ class HomeTab extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
                   // ===== Sections by Genre =====
                   ...genres.map((genre) {
                     final genreMovies = movies
                         .where((movie) => movie.genres.contains(genre))
                         .toList();
-
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

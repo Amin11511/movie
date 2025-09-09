@@ -36,7 +36,7 @@ class GoogleElevationBottom extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               type,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: textColor ?? Colors.white),
+              style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05, fontWeight: FontWeight.normal, color: textColor ?? Colors.white),
             ),
           ],
         ),

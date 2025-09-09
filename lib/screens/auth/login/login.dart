@@ -22,6 +22,7 @@ class _LoginState extends State<Login> {
   final AuthService authService = AuthService();
 
   bool isLoading = false;
+  bool _obscurePassword = true;
 
   Future<void> handleLogin() async {
     setState(() => isLoading = true);
@@ -62,17 +63,34 @@ class _LoginState extends State<Login> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
+                  //Email Text Form Field
                   AppTextFormField(
                     prefixIcon: AppAssets.emailIc,
                     type: "Email",
                     controller: emailController,
                   ),
-                  AppTextFormField(
-                    type: "Password",
-                    prefixIcon: AppAssets.passPostIc,
-                    suffixIcon: AppAssets.passIc,
-                    controller: passwordController,
-                    obscureText: true,
+                  //Password Text Form Field
+                  Stack(
+                    alignment: Alignment.centerRight,
+                    children: [
+                      AppTextFormField(
+                        type: "Password",
+                        prefixIcon: AppAssets.passIc,
+                        controller: passwordController,
+                        obscureText: _obscurePassword,
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                          color: _obscurePassword ? AppColor.white : AppColor.yellow,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 10),
                   isLoading
