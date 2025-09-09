@@ -19,6 +19,8 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   int _currentIndex = 1;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   // Controllers
   final TextEditingController nameController = TextEditingController();
@@ -50,7 +52,7 @@ class _RegisterState extends State<Register> {
     });
 
     try {
-      // 1️⃣ عمل تسجيل أولاً
+      // Register first
       await authService.register(
         name: nameController.text,
         email: emailController.text,
@@ -62,7 +64,7 @@ class _RegisterState extends State<Register> {
 
       print("User registered successfully");
 
-      // 2️⃣ فوراً بعد التسجيل، اعمل login
+      // After register ... login
       UserDm user = await authService.login(
         email: emailController.text,
         password: passwordController.text,
@@ -70,11 +72,11 @@ class _RegisterState extends State<Register> {
 
       print("User logged in: ${user.name}, email: ${user.email}, token: ${user.token}");
 
-      // 3️⃣ حفظ الـ token في SharedPreferences
+      // Save token into shared preference
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString("token", user.token!);
 
-      // 4️⃣ الانتقال للشاشة الرئيسية
+      // Navigate into home screen
       Navigator.pushReplacement(
         context,
         AppRoutes.home(user),
@@ -110,12 +112,12 @@ class _RegisterState extends State<Register> {
                     color: AppColor.yellow,
                     onPressed: () => Navigator.pop(context),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Center(
                       child: Text(
                         "Register",
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: MediaQuery.of(context).size.width * 0.05,
                           fontWeight: FontWeight.normal,
                           color: AppColor.yellow,
                         ),
@@ -157,8 +159,8 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text("Avatar",
-                    style: TextStyle(fontSize: 16, color: AppColor.white)),
+                Text("Avatar",
+                    style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05, color: AppColor.white)),
               ],
             ),
             // Form fields
@@ -166,28 +168,65 @@ class _RegisterState extends State<Register> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
+                  //Name
                   AppTextFormField(
                     prefixIcon: AppAssets.usernameIc,
                     type: "Name",
                     controller: nameController,
                   ),
+                  //Email
                   AppTextFormField(
                     prefixIcon: AppAssets.emailIc,
                     type: "Email",
                     controller: emailController,
                   ),
-                  AppTextFormField(
-                    prefixIcon: AppAssets.passIc,
-                    suffixIcon: AppAssets.passPostIc,
-                    type: "Password",
-                    controller: passwordController,
+                  //password
+                  Stack(
+                    alignment: Alignment.centerRight,
+                    children: [
+                      AppTextFormField(
+                        type: "Password",
+                        prefixIcon: AppAssets.passIc,
+                        controller: passwordController,
+                        obscureText: _obscurePassword,
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                          color: _obscurePassword ? AppColor.white : AppColor.yellow,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                  AppTextFormField(
-                    prefixIcon: AppAssets.passIc,
-                    suffixIcon: AppAssets.passPostIc,
-                    type: "Confirm Password",
-                    controller: confirmPasswordController,
+                  //Confirm Password
+                  Stack(
+                    alignment: Alignment.centerRight,
+                    children: [
+                      AppTextFormField(
+                        type: "Password",
+                        prefixIcon: AppAssets.passIc,
+                        controller: confirmPasswordController,
+                        obscureText: _obscureConfirmPassword,
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                          color: _obscureConfirmPassword ? AppColor.white : AppColor.yellow,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureConfirmPassword = !_obscureConfirmPassword;
+                          });
+                        },
+                      ),
+                    ],
                   ),
+                  //phone number
                   AppTextFormField(
                     prefixIcon: AppAssets.phoneIc,
                     type: "Phone Number",
@@ -203,28 +242,26 @@ class _RegisterState extends State<Register> {
                       onPressed: handleRegister,
                     ),
                   ),
-
                   // Login link
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Already Have Account? ",
+                        Text("Already Have Account? ",
                             style:
-                            TextStyle(fontSize: 14, color: AppColor.white)),
+                            TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04, color: AppColor.white)),
                         GestureDetector(
                           onTap: () => Navigator.pop(context),
-                          child: const Text("Login",
+                          child: Text("Login",
                               style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: MediaQuery.of(context).size.width * 0.04,
                                   fontWeight: FontWeight.bold,
                                   color: AppColor.yellow)),
                         ),
                       ],
                     ),
                   ),
-
                   // Language Toggle
                   LanguageToggle(),
                 ],

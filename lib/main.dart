@@ -7,7 +7,16 @@ import 'package:movie/utilities/app_colors.dart';
 
 void main() {
   final MoviesService service = MoviesService();
-  runApp(MyApp(service: service));
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<MoviesCubit>(
+          create: (_) => MoviesCubit(service)..loadMovies(),
+        ),
+      ],
+      child: MyApp(service: service),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

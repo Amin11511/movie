@@ -42,7 +42,7 @@ class AppTextFormField extends StatelessWidget {
           )
               : null,
           hintText: type,
-          hintStyle: TextStyle(color: Color(0xFF898F9C), fontSize: 18),
+          hintStyle: TextStyle(color: AppColor.white, fontSize: MediaQuery.of(context).size.width * 0.04),
           filled: true,
           fillColor: AppColor.grey,
           contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -55,7 +55,7 @@ class AppTextFormField extends StatelessWidget {
             borderSide: BorderSide(color: AppColor.yellow, width: 2),
           ),
         ),
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.white,),
+        style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.normal, color: Colors.white,),
       ),
     );
   }

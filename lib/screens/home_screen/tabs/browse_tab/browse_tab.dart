@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie/utilities/app_colors.dart';
 import '../../../../movies_dm/movi_model.dart';
 import '../../../../services/movies_service.dart';
+import '../../movie_details_screen/movie_details.dart';
 
 class BrowseTab extends StatefulWidget {
   const BrowseTab({Key? key}) : super(key: key);
@@ -121,39 +122,49 @@ class _BrowseTabState extends State<BrowseTab> {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Stack(
-                            children: [
-                              Image.network(
-                                movie.image,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: double.infinity,
-                              ),
-                              Positioned(
-                                top: 8,
-                                left: 8,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.7),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        movie.rating.toString(),
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const Icon(Icons.star,
-                                          color: Colors.amber, size: 16),
-                                    ],
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => MovieDetails(movieId: movie.id),
+                                ),
+                              );
+                            },
+                            child: Stack(
+                              children: [
+                                Image.network(
+                                  movie.image,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                ),
+                                Positioned(
+                                  top: 8,
+                                  left: 8,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.7),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          movie.rating.toString(),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const Icon(Icons.star,
+                                            color: Colors.amber, size: 16),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );

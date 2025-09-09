@@ -37,10 +37,9 @@ class _HomeState extends State<Home> {
       backgroundColor: AppColor.grey,
       body: Stack(
         children: [
-          // المحتوى الرئيسي
+          // General Content
           tabs[selectedIndex],
-
-          // البوتوم نافيجيشن بار العائم
+          // Floating Bottom Navigation Bar
           Positioned(
             left: 10,
             right: 10,
@@ -50,7 +49,7 @@ class _HomeState extends State<Home> {
               child: Container(
                 color: AppColor.grey,
                 child: BottomNavigationBar(
-                  backgroundColor: AppColor.grey, // عشان Container يظهر
+                  backgroundColor: AppColor.grey,
                   type: BottomNavigationBarType.fixed,
                   selectedItemColor: AppColor.yellow,
                   unselectedItemColor: AppColor.white,
@@ -93,42 +92,6 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
-  // Widget buildBottomNavigationBar() {
-  //   return BottomNavigationBar(
-  //     backgroundColor: AppColor.grey,
-  //     type: BottomNavigationBarType.fixed,
-  //     selectedItemColor: AppColor.yellow,
-  //     unselectedItemColor: AppColor.white,
-  //     iconSize: 30,
-  //     showSelectedLabels: false,
-  //     showUnselectedLabels: false,
-  //     onTap: (index) {
-  //       setState(() {
-  //         selectedIndex = index;
-  //       });
-  //     },
-  //     currentIndex: selectedIndex,
-  //     items: [
-  //       BottomNavigationBarItem(
-  //         icon: buildBottomNavigationBarIcon(AppAssets.homeIc, selectedIndex == 0),
-  //         label: 'Home',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: buildBottomNavigationBarIcon(AppAssets.searchIc, selectedIndex == 1),
-  //         label: 'Search',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: buildBottomNavigationBarIcon(AppAssets.browseIc, selectedIndex == 2),
-  //         label: 'Browse',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: buildBottomNavigationBarIcon(AppAssets.profileIc, selectedIndex == 3),
-  //         label: 'Profile',
-  //       ),
-  //     ],
-  //   );
-  // }
 
   Widget buildBottomNavigationBarIcon(String icon, bool isSelected) {
     return Container(

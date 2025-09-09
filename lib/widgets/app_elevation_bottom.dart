@@ -41,7 +41,7 @@ class AppElevationBottom extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               type,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal, color: textColor ?? AppColor.black),
+              style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05, fontWeight: FontWeight.normal, color: textColor ?? AppColor.black),
             ),
           ],
         ),

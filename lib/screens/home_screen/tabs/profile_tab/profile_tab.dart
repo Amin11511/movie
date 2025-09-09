@@ -7,6 +7,7 @@ import '../../../../favorites_dm/favorites_movie_dm.dart';
 import '../../../../services/favorite_service.dart';
 import '../../../../services/profile_service.dart';
 import '../../../../user_dm/user_model.dart';
+import '../../movie_details_screen/movie_details.dart';
 
 class ProfileTab extends StatefulWidget {
   final UserDm? user;
@@ -277,49 +278,59 @@ class _ProfileTabState extends State<ProfileTab> {
                           ),
                           itemBuilder: (context, index) {
                             final movie = favorites[index];
-                            return Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                image: DecorationImage(
-                                  image: NetworkImage(movie.imageURL),
-                                  fit: BoxFit.cover,
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => MovieDetails(movieId: int.tryParse(movie.movieId) ?? 0,),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  image: DecorationImage(
+                                    image: NetworkImage(movie.imageURL),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    bottom: 8,
-                                    right: 8,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 6,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black54,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                            size: 16,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            movie.rating.toString(),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      bottom: 8,
+                                      right: 8,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 6,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black54,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                              size: 16,
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              movie.rating.toString(),
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             );
                           },
