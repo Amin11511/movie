@@ -9,6 +9,7 @@ class AppTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.controller,
     this.obscureText = false,
+    this.validator,
   });
 
   final String type;
@@ -16,6 +17,7 @@ class AppTextFormField extends StatelessWidget {
   final String? suffixIcon;
   final TextEditingController? controller;
   final bool obscureText;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,8 @@ class AppTextFormField extends StatelessWidget {
         obscureText: obscureText,
         textInputAction: TextInputAction.done,
         cursorColor: AppColor.yellow,
+        validator: validator,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
           prefixIcon: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -42,7 +46,10 @@ class AppTextFormField extends StatelessWidget {
           )
               : null,
           hintText: type,
-          hintStyle: TextStyle(color: AppColor.white, fontSize: MediaQuery.of(context).size.width * 0.04),
+          hintStyle: TextStyle(
+            color: AppColor.white,
+            fontSize: MediaQuery.of(context).size.width * 0.04,
+          ),
           filled: true,
           fillColor: AppColor.grey,
           contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -54,8 +61,20 @@ class AppTextFormField extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide(color: AppColor.yellow, width: 2),
           ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Colors.red, width: 2),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Colors.red, width: 2),
+          ),
         ),
-        style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04, fontWeight: FontWeight.normal, color: Colors.white,),
+        style: TextStyle(
+          fontSize: MediaQuery.of(context).size.width * 0.04,
+          fontWeight: FontWeight.normal,
+          color: Colors.white,
+        ),
       ),
     );
   }

@@ -68,6 +68,15 @@ class _LoginState extends State<Login> {
                     prefixIcon: AppAssets.emailIc,
                     type: "Email",
                     controller: emailController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Email is required';
+                      }
+                      if (!value.contains('@') || !value.contains('.com')) {
+                        return 'Invalid Email';
+                      }
+                      return null;
+                    },
                   ),
                   //Password Text Form Field
                   Stack(

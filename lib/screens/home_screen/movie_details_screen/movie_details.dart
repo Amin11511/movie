@@ -16,27 +16,38 @@ class MovieDetails extends StatefulWidget {
 
 class _MovieDetailsState extends State<MovieDetails> {
   bool isFavorite = false;
+  late Future<MovieDetailsDm> _future;
 
   @override
   void initState() {
     super.initState();
-    checkIfFavorite();
+    _future = _loadMovie();
   }
 
-  Future<void> checkIfFavorite() async {
+  Future<bool> checkIfFavorite() async {
     final service = FavoriteService();
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("token");
-    if (token == null) return;
+    if (token == null) return false;
 
     final favorites = await service.getAllFavorites();
     final movieIdStr = widget.movieId.toString();
 
     final exists = favorites.any((fav) => fav.movieId == movieIdStr);
 
-    setState(() {
-      isFavorite = exists;
-    });
+    return exists;
+  }
+
+  Future<MovieDetailsDm> _loadMovie() async {
+    final favFut = checkIfFavorite(); // ابدأ التحقق بالتوازي
+    final movie = await fetchMovieDetails(); // انتظر تفاصيل الفيلم
+    final isFav = await favFut; // انتظر التحقق لو ما خلصش
+    if (mounted) {
+      setState(() {
+        isFavorite = isFav;
+      });
+    }
+    return movie;
   }
 
   Future<MovieDetailsDm> fetchMovieDetails() async {
@@ -47,13 +58,12 @@ class _MovieDetailsState extends State<MovieDetails> {
   Future<void> toggleFavorite(MovieDetailsData movie) async {
     final service = FavoriteService();
 
-    // جلب التوكين للتأكد من تسجيل الدخول
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("token");
 
     if (token == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("يجب تسجيل الدخول أولاً")),
+        const SnackBar(content: Text("Login First")),
       );
       return;
     }
@@ -61,28 +71,26 @@ class _MovieDetailsState extends State<MovieDetails> {
     bool success = false;
 
     if (isFavorite) {
-      // ✅ إزالة من المفضلة باستخدام DELETE API الجديد
       success = await service.removeFromFavorite(movie.id.toString());
       if (success) {
         setState(() => isFavorite = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("تمت الإزالة من المفضلة")),
+          const SnackBar(content: Text("Removed From Favorites")),
         );
       }
     } else {
-      // ❤️ إضافة إلى المفضلة كما كانت
       success = await service.addToFavorite(movie);
       if (success) {
         setState(() => isFavorite = true);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("تمت الإضافة إلى المفضلة")),
+          const SnackBar(content: Text("Added To Favorites")),
         );
       }
     }
 
     if (!success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("فشل في العملية")),
+        const SnackBar(content: Text("Process Failed")),
       );
     }
   }
@@ -93,7 +101,7 @@ class _MovieDetailsState extends State<MovieDetails> {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: FutureBuilder<MovieDetailsDm>(
-        future: fetchMovieDetails(),
+        future: _future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -442,17 +450,17 @@ class _MovieDetailsState extends State<MovieDetails> {
                 ), // Summary text
                 const SizedBox(height: 16,),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    (movie.descriptionFull != null && movie.descriptionFull!.isNotEmpty)
-                        ? movie.descriptionFull!
-                        : "Following the events of Spider-Man No Way Home, Doctor Strange unwittingly casts a forbidden spell that accidentally opens up the multiverse. With help from Wong and Scarlet Witch, Strange confronts various versions of himself as well as teaming up with the young America Chavez while traveling through various realities and working to restore reality as he knows it. Along the way, Strange and his allies realize they must take on a powerful new adversary who seeks to take over the multiverse.—Blazer346",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: AppColor.white,
-                    ),
-                  )
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      (movie.descriptionFull != null && movie.descriptionFull!.isNotEmpty)
+                          ? movie.descriptionFull!
+                          : "Following the events of Spider-Man No Way Home, Doctor Strange unwittingly casts a forbidden spell that accidentally opens up the multiverse. With help from Wong and Scarlet Witch, Strange confronts various versions of himself as well as teaming up with the young America Chavez while traveling through various realities and working to restore reality as he knows it. Along the way, Strange and his allies realize they must take on a powerful new adversary who seeks to take over the multiverse.—Blazer346",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: AppColor.white,
+                      ),
+                    )
                 ),
                 const SizedBox(height: 16,),
                 Padding(
@@ -475,34 +483,34 @@ class _MovieDetailsState extends State<MovieDetails> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[850],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: ListTile(
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image(image: AssetImage(AppAssets.profileIc), width: 25, height: 25, fit: BoxFit.contain,),
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[850],
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          title: Text(
-                            "Name : Actor",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                          child: ListTile(
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image(image: AssetImage(AppAssets.profileIc), width: 25, height: 25, fit: BoxFit.contain,),
+                            ),
+                            title: Text(
+                              "Name : Actor",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              "Character : Character",
+                              style: const TextStyle(
+                                color: Colors.white70,
+                              ),
                             ),
                           ),
-                          subtitle: Text(
-                            "Character : Character",
-                            style: const TextStyle(
-                              color: Colors.white70,
-                            ),
-                          ),
                         ),
-                      ),
-                    ]
+                      ]
                   ),
                 ),
                 const SizedBox(height: 16),
