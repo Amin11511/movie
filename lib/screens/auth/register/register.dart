@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,9 +91,30 @@ class _RegisterState extends State<Register> {
       );
 
     } catch (e) {
-      print("Register/Login error: $e");
+      String errorMessage = "Register failed";
+
+      if (e is DioException) {
+        final rawMessage = e.response?.data["message"]?.toString() ?? "";
+
+        final errorMap = {
+          "email already exists": "Invalid Email",
+          "password mismatch": "Password don't match",
+          "invalid phone": "Invalid Phone",
+          "email must be an email": "email must be @etc.com"
+        };
+
+        errorMessage = errorMap.entries
+            .firstWhere(
+              (entry) => rawMessage.toLowerCase().contains(entry.key),
+          orElse: () => MapEntry("", rawMessage),
+        )
+            .value;
+      } else {
+        errorMessage = "Something went wrong";
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Register failed")),
+        SnackBar(content: Text(errorMessage)),
       );
     } finally {
       setState(() {
