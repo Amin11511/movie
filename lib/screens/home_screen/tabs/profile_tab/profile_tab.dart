@@ -45,9 +45,11 @@ class _ProfileTabState extends State<ProfileTab> {
 
   void _loadFavorites() async {
     final favorites = await FavoriteService().getAllFavorites();
-    setState(() {
-      favoriteCount = favorites.length;
-    });
+    if (mounted) {
+      setState(() {
+        favoriteCount = favorites.length;
+      });
+    }
   }
 
   Future<UserDm> _loadProfile() async {
@@ -56,7 +58,7 @@ class _ProfileTabState extends State<ProfileTab> {
     if (token == null) throw Exception("No token found");
 
     final user = await ProfileService().getProfile(token);
-
+    print('Loaded user: ${user.name}, ${user.avaterId}'); // للتصحيح
     return user;
   }
 
@@ -64,6 +66,7 @@ class _ProfileTabState extends State<ProfileTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<UserDm>(
+        key: ValueKey(_futureProfile), // نضمن إعادة بناء الـ FutureBuilder
         future: _futureProfile,
         builder: (context, snapshot) {
           // Loading state
@@ -93,7 +96,7 @@ class _ProfileTabState extends State<ProfileTab> {
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Column(
                         children: [
-                          SizedBox(height: 35,),
+                          SizedBox(height: 35),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Row(
@@ -102,7 +105,12 @@ class _ProfileTabState extends State<ProfileTab> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image(image: AssetImage(avatars[user.avaterId ?? 0]), width: 120, height: 120, fit: BoxFit.cover,),
+                                      Image(
+                                        image: AssetImage(avatars[user.avaterId ?? 0]),
+                                        width: 120,
+                                        height: 120,
+                                        fit: BoxFit.cover,
+                                      ),
                                       SizedBox(height: 15),
                                       Text(
                                         user.name,
@@ -119,9 +127,23 @@ class _ProfileTabState extends State<ProfileTab> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text(favoriteCount.toString(), style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: AppColor.white),),
+                                      Text(
+                                        favoriteCount.toString(),
+                                        style: TextStyle(
+                                          fontSize: 36,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColor.white,
+                                        ),
+                                      ),
                                       SizedBox(height: 20),
-                                      Text("Wish List", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColor.white),),
+                                      Text(
+                                        "Wish List",
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColor.white,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -129,9 +151,23 @@ class _ProfileTabState extends State<ProfileTab> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("10", style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: AppColor.white),),
+                                      Text(
+                                        "10",
+                                        style: TextStyle(
+                                          fontSize: 36,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColor.white,
+                                        ),
+                                      ),
                                       SizedBox(height: 20),
-                                      Text("History", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColor.white),),
+                                      Text(
+                                        "History",
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColor.white,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -146,17 +182,17 @@ class _ProfileTabState extends State<ProfileTab> {
                                   flex: 60,
                                   child: ElevatedButton(
                                     onPressed: () async {
-                                      final newAvatarId = await Navigator.push(
+                                      final updatedData = await Navigator.push(
                                         context,
                                         AppRoutes.updateProfile(),
                                       );
-
-                                      if (newAvatarId != null) {
-                                        setState(() {
-                                          _futureProfile = _futureProfile.then(
-                                                (user) => user.copyWith(avaterId: newAvatarId),
-                                          );
-                                        });
+                                      print('Received updatedData: $updatedData'); // للتصحيح
+                                      if (updatedData != null && updatedData is Map<String, dynamic>) {
+                                        if (mounted) {
+                                          setState(() {
+                                            _futureProfile = _loadProfile(); // تحديث البيانات من الـ API
+                                          });
+                                        }
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
@@ -179,16 +215,19 @@ class _ProfileTabState extends State<ProfileTab> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 10,),
+                                SizedBox(width: 10),
                                 Expanded(
                                   flex: 40,
                                   child: ElevatedButton(
-                                    onPressed: (){},
+                                    onPressed: () {},
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColor.red,
                                       foregroundColor: Colors.black,
                                       padding: EdgeInsets.symmetric(vertical: 16),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15), side: BorderSide(color: AppColor.black, width: 2)),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                        side: BorderSide(color: AppColor.black, width: 2),
+                                      ),
                                       elevation: 0,
                                     ),
                                     child: Image(image: AssetImage(AppAssets.exit)),
@@ -230,7 +269,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                               color: AppColor.white,
                                             ),
                                           ),
-                                          SizedBox(height: 16,),
+                                          SizedBox(height: 16),
                                         ],
                                       ),
                                     ),
@@ -265,7 +304,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                               color: AppColor.white,
                                             ),
                                           ),
-                                          SizedBox(height: 16,),
+                                          SizedBox(height: 16),
                                         ],
                                       ),
                                     ),
@@ -281,7 +320,7 @@ class _ProfileTabState extends State<ProfileTab> {
                 ),
                 Expanded(
                   child: FutureBuilder<List<FavoriteMovieDm>>(
-                    future: FavoriteService().getAllFavorites(),
+                    future: _futureFavorites,
                     builder: (context, favSnapshot) {
                       if (favSnapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
@@ -319,7 +358,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => MovieDetails(movieId: int.tryParse(movie.movieId) ?? 0,),
+                                    builder: (_) => MovieDetails(movieId: int.tryParse(movie.movieId) ?? 0),
                                   ),
                                 );
                               },

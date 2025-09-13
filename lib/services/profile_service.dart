@@ -47,10 +47,7 @@ class ProfileService {
 
       final response = await _dio.patch(
         "profile",
-        data: {
-          if (name != null) "name": name,
-          if (phone != null) "phone": phone,
-        },
+        data: data,
         options: Options(
           headers: {
             "Authorization": "Bearer $token",
