@@ -112,7 +112,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   void _showAvatarPicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColor.black,
+      backgroundColor: AppColor.grey,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -132,24 +132,32 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
                 return GestureDetector(
                   onTap: () {
-
                     setState(() {
                       selectedAvatarIndex = index;
                     });
-
-
                     setModalState(() {});
-
-
                     Navigator.pop(context);
                   },
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage(avatars[index]),
-                    radius: isSelected ? 45 : 40,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: AppColor.yellow,
+                        width: 1,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        avatars[index],
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 );
               },
             );
+
           },
         );
       },
