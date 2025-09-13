@@ -37,8 +37,14 @@ class ProfileService {
     required String token,
     String? name,
     String? phone,
+    int? avaterId,
   }) async {
     try {
+      final data = <String, dynamic>{};
+      if (name != null && name.isNotEmpty) data['name'] = name;
+      if (phone != null && phone.isNotEmpty) data['phone'] = phone;
+      if (avaterId != null) data['avaterId'] = avaterId;
+
       final response = await _dio.patch(
         "profile",
         data: {

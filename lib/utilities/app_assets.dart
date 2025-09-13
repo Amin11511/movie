@@ -33,6 +33,13 @@ abstract final class AppAssets {
   static const String avatarRight = 'assets/register/avatar_right.png';
   static const String phoneIc = 'assets/register/phone_ic.png';
   static const String usernameIc = 'assets/register/username_ic.png';
+  static const String avatar4 = 'assets/register/avatar4.png';
+  static const String avatar5 = 'assets/register/avatar5.png';
+  static const String avatar6 = 'assets/register/avatar6.png';
+  static const String avatar7 = 'assets/register/avatar7.png';
+  static const String avatar8 = 'assets/register/avatar8.png';
+  static const String avatar9 = 'assets/register/avatar9.png';
+
 
   static const String forgetPassword = 'assets/forget_password/forget_password.png';
   static const String empty = 'assets/empty_search/empty.png';

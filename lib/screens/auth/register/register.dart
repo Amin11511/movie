@@ -35,9 +35,16 @@ class _RegisterState extends State<Register> {
     AppAssets.avatarLeft,
     AppAssets.avatarMeddle,
     AppAssets.avatarRight,
+    AppAssets.avatar4,
+    AppAssets.avatar5,
+    AppAssets.avatar6,
+    AppAssets.avatar7,
+    AppAssets.avatar8,
+    AppAssets.avatar9,
   ];
 
   bool isLoading = false;
+  String? selectedAvatar;
 
   void handleRegister() async {
     if (passwordController.text != confirmPasswordController.text) {
@@ -153,7 +160,10 @@ class _RegisterState extends State<Register> {
                       enableInfiniteScroll: false,
                       viewportFraction: 0.4,
                       onPageChanged: (index, reason) {
-                        setState(() => _currentIndex = index);
+                        setState(() {
+                          _currentIndex = index;
+                          selectedAvatar = avatars[index];
+                        });
                       },
                     ),
                   ),
