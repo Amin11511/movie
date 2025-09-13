@@ -66,9 +66,10 @@ class _UpdateProfileState extends State<UpdateProfile> {
     try {
       final currentUser = await _futureUser;
       final int avaterToSend = selectedAvatarIndex ?? currentUser.avaterId ?? 0;
+      final String nameToSend = _nameController.text.isNotEmpty ? _nameController.text : currentUser.name ?? "";
       final message = await ProfileService().updateProfile(
         token: token,
-        name: _nameController.text,
+        name: nameToSend,
         phone: _phoneController.text,
         avaterId: avaterToSend,
       );
@@ -77,7 +78,16 @@ class _UpdateProfileState extends State<UpdateProfile> {
         SnackBar(content: Text(message)),
       );
 
-      Navigator.pop(context, selectedAvatarIndex ?? currentUser.avaterId);
+      print('Returning data: ${{
+        'name': nameToSend,
+        'avaterId': avaterToSend,
+      }}'); // للتصحيح
+
+      // Return updated data as a map
+      Navigator.pop(context, {
+        'name': nameToSend,
+        'avaterId': avaterToSend,
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Update failed: $e")),
@@ -157,7 +167,6 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 );
               },
             );
-
           },
         );
       },
@@ -178,7 +187,6 @@ class _UpdateProfileState extends State<UpdateProfile> {
           } else if (!snapshot.hasData) {
             return const Center(child: Text("No user data", style: TextStyle(color: Colors.white)));
           }
-
 
           final user = snapshot.data!;
           _nameController.text = user.name ?? "";
@@ -214,10 +222,16 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 ),
                 const SizedBox(height: 35),
                 GestureDetector(
-                    onTap: (){
-                      _showAvatarPicker(context);
-                    },
-                    child: Image(image: AssetImage(avatars[selectedAvatarIndex ?? user.avaterId ?? 0],), width: 120, height: 120, fit: BoxFit.cover,)),
+                  onTap: () {
+                    _showAvatarPicker(context);
+                  },
+                  child: Image(
+                    image: AssetImage(avatars[selectedAvatarIndex ?? user.avaterId ?? 0]),
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 const SizedBox(height: 35),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -307,7 +321,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     ],
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.3,),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.3),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: ElevatedButton(
