@@ -23,6 +23,18 @@ class _ProfileTabState extends State<ProfileTab> {
   late Future<List<FavoriteMovieDm>> _futureFavorites;
   int favoriteCount = 0;
 
+  final List<String> avatars = [
+    AppAssets.avatarLeft,
+    AppAssets.avatarMeddle,
+    AppAssets.avatarRight,
+    AppAssets.avatar4,
+    AppAssets.avatar5,
+    AppAssets.avatar6,
+    AppAssets.avatar7,
+    AppAssets.avatar8,
+    AppAssets.avatar9,
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +54,10 @@ class _ProfileTabState extends State<ProfileTab> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("token");
     if (token == null) throw Exception("No token found");
-    return ProfileService().getProfile(token);
+
+    final user = await ProfileService().getProfile(token);
+
+    return user;
   }
 
   @override
@@ -87,7 +102,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image(image: AssetImage(AppAssets.avatar), width: 120, height: 120,),
+                                      Image(image: AssetImage(avatars[user.avaterId ?? 0]), width: 120, height: 120, fit: BoxFit.cover,),
                                       SizedBox(height: 15),
                                       Text(
                                         user.name,
@@ -130,17 +145,38 @@ class _ProfileTabState extends State<ProfileTab> {
                                 Expanded(
                                   flex: 60,
                                   child: ElevatedButton(
-                                    onPressed: (){
-                                      Navigator.push(context, AppRoutes.updateProfile());
+                                    onPressed: () async {
+                                      final newAvatarId = await Navigator.push(
+                                        context,
+                                        AppRoutes.updateProfile(),
+                                      );
+
+                                      if (newAvatarId != null) {
+                                        setState(() {
+                                          _futureProfile = _futureProfile.then(
+                                                (user) => user.copyWith(avaterId: newAvatarId),
+                                          );
+                                        });
+                                      }
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColor.yellow,
                                       foregroundColor: Colors.black,
                                       padding: EdgeInsets.symmetric(vertical: 16),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15), side: BorderSide(color: AppColor.black, width: 2)),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                        side: BorderSide(color: AppColor.black, width: 2),
+                                      ),
                                       elevation: 0,
                                     ),
-                                    child: Text("Edit Profile", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColor.black),),
+                                    child: Text(
+                                      "Edit Profile",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: AppColor.black,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 SizedBox(width: 10,),
@@ -245,7 +281,7 @@ class _ProfileTabState extends State<ProfileTab> {
                 ),
                 Expanded(
                   child: FutureBuilder<List<FavoriteMovieDm>>(
-                    future: FavoriteService().getAllFavorites(), // ✅ هنا الداتا
+                    future: FavoriteService().getAllFavorites(),
                     builder: (context, favSnapshot) {
                       if (favSnapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());

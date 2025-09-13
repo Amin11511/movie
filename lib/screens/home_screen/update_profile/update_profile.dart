@@ -19,6 +19,20 @@ class _UpdateProfileState extends State<UpdateProfile> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
 
+  final List<String> avatars = [
+    AppAssets.avatarLeft,
+    AppAssets.avatarMeddle,
+    AppAssets.avatarRight,
+    AppAssets.avatar4,
+    AppAssets.avatar5,
+    AppAssets.avatar6,
+    AppAssets.avatar7,
+    AppAssets.avatar8,
+    AppAssets.avatar9,
+  ];
+
+  int? selectedAvatarIndex;
+
   @override
   void initState() {
     super.initState();
@@ -50,20 +64,20 @@ class _UpdateProfileState extends State<UpdateProfile> {
     }
 
     try {
+      final currentUser = await _futureUser;
+      final int avaterToSend = selectedAvatarIndex ?? currentUser.avaterId ?? 0;
       final message = await ProfileService().updateProfile(
         token: token,
         name: _nameController.text,
         phone: _phoneController.text,
+        avaterId: avaterToSend,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
       );
 
-      // إعادة تحميل بيانات المستخدم بعد التحديث
-      setState(() {
-        _futureUser = _loadUser();
-      });
+      Navigator.pop(context, selectedAvatarIndex ?? currentUser.avaterId);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Update failed: $e")),
@@ -87,13 +101,59 @@ class _UpdateProfileState extends State<UpdateProfile> {
         SnackBar(content: Text(message)),
       );
 
-      // بعد الحذف: خروج أو الرجوع لشاشة تسجيل الدخول
       Navigator.pushReplacement(context, AppRoutes.login);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
       );
     }
+  }
+
+  void _showAvatarPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColor.black,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+              ),
+              itemCount: avatars.length,
+              itemBuilder: (context, index) {
+                final bool isSelected = index == selectedAvatarIndex;
+
+                return GestureDetector(
+                  onTap: () {
+
+                    setState(() {
+                      selectedAvatarIndex = index;
+                    });
+
+
+                    setModalState(() {});
+
+
+                    Navigator.pop(context);
+                  },
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage(avatars[index]),
+                    radius: isSelected ? 45 : 40,
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -111,7 +171,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
             return const Center(child: Text("No user data", style: TextStyle(color: Colors.white)));
           }
 
-          // البيانات جاهزة
+
           final user = snapshot.data!;
           _nameController.text = user.name ?? "";
           _phoneController.text = user.phone ?? "";
@@ -144,7 +204,11 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 ),
               ),
               const SizedBox(height: 35),
-              Image(image: AssetImage(AppAssets.avatarMeddle)),
+              GestureDetector(
+                  onTap: (){
+                    _showAvatarPicker(context);
+                  },
+                  child: Image(image: AssetImage(avatars[selectedAvatarIndex ?? user.avaterId ?? 0],), width: 120, height: 120, fit: BoxFit.cover,)),
               const SizedBox(height: 35),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),

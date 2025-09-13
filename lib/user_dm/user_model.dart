@@ -64,4 +64,28 @@ class UserDm {
       "token": token,
     };
   }
+
+  UserDm copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? password,
+    String? phone,
+    int? avaterId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? token,
+  }) {
+    return UserDm(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      phone: phone ?? this.phone,
+      avaterId: avaterId ?? this.avaterId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      token: token ?? this.token,
+    );
+  }
 }
