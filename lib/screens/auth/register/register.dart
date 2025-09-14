@@ -97,10 +97,15 @@ class _RegisterState extends State<Register> {
         final rawMessage = e.response?.data["message"]?.toString() ?? "";
 
         final errorMap = {
-          "email already exists": "Invalid Email",
+          "email already exists": "Email already exists",
           "password mismatch": "Password don't match",
-          "invalid phone": "Invalid Phone",
-          "email must be an email": "email must be @etc.com"
+          "invalid phone": "Invalid Phone, try +20 before your phone",
+          "email must be an email": "Email must be @etc.com",
+          "password is must be strong": "Password must be strong (Capital - Small - Sign - Number)",
+          "password must be longer than or equal to 8 characters": "Password must be longer than or equal to 8 characters",
+          "confirm password must be strong": "Confirm password must be strong",
+          "confirmpassword must be longer than or equal to 8 characters": "Confirm Password must be longer than or equal to 8 characters",
+          "phone invaild": "Invalid Phone, try +20 before your phone and your phone equal 10 numbers",
         };
 
         errorMessage = errorMap.entries
@@ -268,7 +273,7 @@ class _RegisterState extends State<Register> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: isLoading
-                        ? const CircularProgressIndicator()
+                        ? const CircularProgressIndicator(color: AppColor.yellow,)
                         : AppElevationBottom(
                       type: "Create Account",
                       onPressed: handleRegister,

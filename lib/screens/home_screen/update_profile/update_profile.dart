@@ -181,7 +181,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
         future: _futureUser,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: AppColor.yellow,));
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}", style: const TextStyle(color: Colors.white)));
           } else if (!snapshot.hasData) {
@@ -243,7 +243,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Image(
-                          image: AssetImage(AppAssets.profileIc),
+                          image: AssetImage(AppAssets.name),
                           height: 24,
                           width: 24,
                         ),
@@ -275,7 +275,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Image(
-                          image: AssetImage(AppAssets.profileIc),
+                          image: AssetImage(AppAssets.phoneIc),
                           height: 24,
                           width: 24,
                         ),
