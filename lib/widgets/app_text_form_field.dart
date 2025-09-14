@@ -23,57 +23,65 @@ class AppTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
-      child: TextFormField(
-        controller: controller,
-        obscureText: obscureText,
-        textInputAction: TextInputAction.done,
-        cursorColor: AppColor.yellow,
-        validator: validator,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        decoration: InputDecoration(
-          prefixIcon: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Image(image: AssetImage(prefixIcon), height: 24, width: 24),
-          ),
-          suffixIcon: suffixIcon != null
-              ? Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Image(
-              image: AssetImage(suffixIcon!),
-              height: 24,
-              width: 24,
-            ),
-          )
-              : null,
-          hintText: type,
-          hintStyle: TextStyle(
-            color: AppColor.white,
-            fontSize: MediaQuery.of(context).size.width * 0.04,
-          ),
-          filled: true,
-          fillColor: AppColor.grey,
-          contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Color(0xFF898F9C), width: 1.5),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: AppColor.yellow, width: 2),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Colors.red, width: 2),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: Colors.red, width: 2),
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          textSelectionTheme: TextSelectionThemeData(
+            cursorColor: AppColor.yellow,
+            selectionColor: AppColor.yellow.withOpacity(0.3),
+            selectionHandleColor: AppColor.yellow,
           ),
         ),
-        style: TextStyle(
-          fontSize: MediaQuery.of(context).size.width * 0.04,
-          fontWeight: FontWeight.normal,
-          color: Colors.white,
+        child: TextFormField(
+          controller: controller,
+          obscureText: obscureText,
+          textInputAction: TextInputAction.done,
+          validator: validator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          decoration: InputDecoration(
+            prefixIcon: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Image(image: AssetImage(prefixIcon), height: 24, width: 24),
+            ),
+            suffixIcon: suffixIcon != null
+                ? Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Image(
+                image: AssetImage(suffixIcon!),
+                height: 24,
+                width: 24,
+              ),
+            )
+                : null,
+            hintText: type,
+            hintStyle: TextStyle(
+              color: AppColor.white,
+              fontSize: MediaQuery.of(context).size.width * 0.04,
+            ),
+            filled: true,
+            fillColor: AppColor.grey,
+            contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Color(0xFF898F9C), width: 1.5),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: AppColor.yellow, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.red, width: 2),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.red, width: 2),
+            ),
+          ),
+          style: TextStyle(
+            fontSize: MediaQuery.of(context).size.width * 0.04,
+            fontWeight: FontWeight.normal,
+            color: Colors.white,
+          ),
         ),
       ),
     );

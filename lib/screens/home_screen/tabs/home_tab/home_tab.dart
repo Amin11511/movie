@@ -20,12 +20,12 @@ class HomeTab extends StatelessWidget {
       body: BlocBuilder<MoviesCubit, MoviesState>(
         builder: (context, state) {
           if (state is MoviesLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: AppColor.yellow,));
           } else if (state is MoviesLoaded) {
             final movies = state.movies;
 
             if (movies.isEmpty) {
-              return const Center(child: Text("No movies found"));
+              return const Center(child: Text("No movies found", style: TextStyle(color: AppColor.white, fontSize: 20)));
             }
 
             final genresSet = <String>{};
@@ -38,7 +38,6 @@ class HomeTab extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ===== Background + Carousel =====
                   SizedBox(
                     height: screenHeight * 2 / 3,
                     width: double.infinity,
@@ -129,7 +128,6 @@ class HomeTab extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // ===== Sections by Genre =====
                   ...genres.map((genre) {
                     final genreMovies = movies
                         .where((movie) => movie.genres.contains(genre))
@@ -244,6 +242,7 @@ class HomeTab extends StatelessWidget {
                       ],
                     );
                   }).toList(),
+                  SizedBox(height: screenHeight * 0.1),
                 ],
               ),
             );

@@ -71,7 +71,7 @@ class _ProfileTabState extends State<ProfileTab> {
         builder: (context, snapshot) {
           // Loading state
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: AppColor.yellow,));
           }
 
           // Error state
@@ -186,11 +186,11 @@ class _ProfileTabState extends State<ProfileTab> {
                                         context,
                                         AppRoutes.updateProfile(),
                                       );
-                                      print('Received updatedData: $updatedData'); // للتصحيح
+                                      print('Received updatedData: $updatedData');
                                       if (updatedData != null && updatedData is Map<String, dynamic>) {
                                         if (mounted) {
                                           setState(() {
-                                            _futureProfile = _loadProfile(); // تحديث البيانات من الـ API
+                                            _futureProfile = _loadProfile();
                                           });
                                         }
                                       }
@@ -219,10 +219,12 @@ class _ProfileTabState extends State<ProfileTab> {
                                 Expanded(
                                   flex: 40,
                                   child: ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.pushReplacement(context, AppRoutes.login);
+                                    },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColor.red,
-                                      foregroundColor: Colors.black,
+                                      foregroundColor: AppColor.black,
                                       padding: EdgeInsets.symmetric(vertical: 16),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(15),
@@ -323,7 +325,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     future: _futureFavorites,
                     builder: (context, favSnapshot) {
                       if (favSnapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator(color: AppColor.yellow,));
                       }
 
                       if (favSnapshot.hasError) {
@@ -414,6 +416,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     },
                   ),
                 ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
               ],
             );
           }

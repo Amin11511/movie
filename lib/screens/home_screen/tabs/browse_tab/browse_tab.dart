@@ -87,7 +87,6 @@ class _BrowseTabState extends State<BrowseTab> {
                 },
               ),
             ),
-        
             // Movies Grid
             Expanded(
               child: FutureBuilder<List<MovieModel>>(
@@ -95,7 +94,7 @@ class _BrowseTabState extends State<BrowseTab> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
-                        child: CircularProgressIndicator(color: Colors.amber));
+                        child: CircularProgressIndicator(color: AppColor.yellow,));
                   } else if (snapshot.hasError) {
                     return Center(child: Text("Error: ${snapshot.error}"));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -173,6 +172,7 @@ class _BrowseTabState extends State<BrowseTab> {
                 },
               ),
             ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.1),
           ],
         ),
       ),
