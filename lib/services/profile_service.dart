@@ -41,14 +41,13 @@ class ProfileService {
   }) async {
     try {
       final data = <String, dynamic>{};
-      if (name != null) data['name'] = name; // إرسال الـ name حتى لو فاضي
-      if (phone != null) data['phone'] = phone; // إرسال الـ phone حتى لو فاضي
+      if (name != null) data['name'] = name;
+      if (phone != null) data['phone'] = phone;
       if (avaterId != null) data['avaterId'] = avaterId;
-      // أسماء بديلة لو الـ backend بيستخدمها
       if (name != null) data['username'] = name;
       if (phone != null) data['phoneNumber'] = phone;
 
-      print("Sending data to updateProfile: $data"); // للتصحيح
+      print("Sending data to updateProfile: $data");
 
       final response = await _dio.patch(
         "profile",

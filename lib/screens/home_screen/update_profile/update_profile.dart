@@ -44,7 +44,6 @@ class _UpdateProfileState extends State<UpdateProfile> {
     final token = prefs.getString("token");
     if (token == null) throw Exception("No token found");
     final user = await ProfileService().getProfile(token);
-    // تعيين القيم الأولية للـ controllers هنا بدلًا من داخل الـ build
     _nameController.text = user.name ?? "";
     _phoneController.text = user.phone ?? "";
     return user;
@@ -70,9 +69,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
     try {
       final currentUser = await _futureUser;
       final int avaterToSend = selectedAvatarIndex ?? currentUser.avaterId ?? 0;
-      final String nameToSend = _nameController.text; // إرسال الاسم حتى لو فاضي
-      final String phoneToSend = _phoneController.text; // إرسال الموبايل حتى لو فاضي
-      print('Sending data: name: $nameToSend, phone: $phoneToSend, avaterId: $avaterToSend'); // للتصحيح
+      final String nameToSend = _nameController.text;
+      final String phoneToSend = _phoneController.text;
+      print('Sending data: name: $nameToSend, phone: $phoneToSend, avaterId: $avaterToSend');
 
       final message = await ProfileService().updateProfile(
         token: token,

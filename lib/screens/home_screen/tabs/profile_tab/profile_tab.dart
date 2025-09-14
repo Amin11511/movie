@@ -22,6 +22,7 @@ class _ProfileTabState extends State<ProfileTab> {
   int selectedIndex = 0;
   late Future<List<FavoriteMovieDm>> _futureFavorites;
   int favoriteCount = 0;
+  final PageController _pageController = PageController(initialPage: 0);
 
   final List<String> avatars = [
     AppAssets.avatarLeft,
@@ -58,8 +59,14 @@ class _ProfileTabState extends State<ProfileTab> {
     if (token == null) throw Exception("No token found");
 
     final user = await ProfileService().getProfile(token);
-    print('Loaded user: ${user.name}, ${user.phone}, ${user.avaterId}'); // للتصحيح
+    print('Loaded user: ${user.name}, ${user.phone}, ${user.avaterId}');
     return user;
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -149,7 +156,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "10",
+                                        "0",
                                         style: TextStyle(
                                           fontSize: 36,
                                           fontWeight: FontWeight.bold,
@@ -244,6 +251,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                     onTap: () {
                                       setState(() {
                                         selectedIndex = 0;
+                                        _pageController.jumpToPage(0);
                                       });
                                     },
                                     child: Container(
@@ -279,6 +287,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                     onTap: () {
                                       setState(() {
                                         selectedIndex = 1;
+                                        _pageController.jumpToPage(1);
                                       });
                                     },
                                     child: Container(
@@ -318,99 +327,115 @@ class _ProfileTabState extends State<ProfileTab> {
                   ),
                 ),
                 Expanded(
-                  child: FutureBuilder<List<FavoriteMovieDm>>(
-                    future: _futureFavorites,
-                    builder: (context, favSnapshot) {
-                      if (favSnapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator(color: AppColor.yellow));
-                      }
+                  child: PageView(
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        selectedIndex = index;
+                      });
+                    },
+                    children: [
+                      FutureBuilder<List<FavoriteMovieDm>>(
+                        future: _futureFavorites,
+                        builder: (context, favSnapshot) {
+                          if (favSnapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator(color: AppColor.yellow));
+                          }
 
-                      if (favSnapshot.hasError) {
-                        return Center(child: Text("Error: ${favSnapshot.error}"));
-                      }
+                          if (favSnapshot.hasError) {
+                            return Center(child: Text("Error: ${favSnapshot.error}"));
+                          }
 
-                      final favorites = favSnapshot.data ?? [];
+                          final favorites = favSnapshot.data ?? [];
 
-                      if (favorites.isEmpty) {
-                        return Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Image.asset(AppAssets.empty),
-                          ),
-                        );
-                      }
+                          if (favorites.isEmpty) {
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Image.asset(AppAssets.empty),
+                              ),
+                            );
+                          }
 
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GridView.builder(
-                          itemCount: favorites.length,
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.7,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                          ),
-                          itemBuilder: (context, index) {
-                            final movie = favorites[index];
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => MovieDetails(movieId: int.tryParse(movie.movieId) ?? 0),
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GridView.builder(
+                              itemCount: favorites.length,
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 0.7,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
+                              ),
+                              itemBuilder: (context, index) {
+                                final movie = favorites[index];
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => MovieDetails(movieId: int.tryParse(movie.movieId) ?? 0),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      image: DecorationImage(
+                                        image: NetworkImage(movie.imageURL),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                          bottom: 8,
+                                          right: 8,
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 6,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.black54,
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.star,
+                                                  color: Colors.amber,
+                                                  size: 16,
+                                                ),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  movie.rating.toString(),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  image: DecorationImage(
-                                    image: NetworkImage(movie.imageURL),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      bottom: 8,
-                                      right: 8,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.black54,
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.star,
-                                              color: Colors.amber,
-                                              size: 16,
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              movie.rating.toString(),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
+                            ),
+                          );
+                        },
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Image.asset(AppAssets.empty),
                         ),
-                      );
-                    },
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.1),
