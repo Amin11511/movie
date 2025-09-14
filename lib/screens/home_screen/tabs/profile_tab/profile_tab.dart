@@ -58,7 +58,7 @@ class _ProfileTabState extends State<ProfileTab> {
     if (token == null) throw Exception("No token found");
 
     final user = await ProfileService().getProfile(token);
-    print('Loaded user: ${user.name}, ${user.avaterId}'); // للتصحيح
+    print('Loaded user: ${user.name}, ${user.phone}, ${user.avaterId}'); // للتصحيح
     return user;
   }
 
@@ -66,20 +66,17 @@ class _ProfileTabState extends State<ProfileTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<UserDm>(
-        key: ValueKey(_futureProfile), // نضمن إعادة بناء الـ FutureBuilder
+        key: ValueKey(_futureProfile),
         future: _futureProfile,
         builder: (context, snapshot) {
-          // Loading state
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: AppColor.yellow,));
+            return const Center(child: CircularProgressIndicator(color: AppColor.yellow));
           }
 
-          // Error state
           if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           }
 
-          // Data loaded
           if (snapshot.hasData) {
             final user = snapshot.data!;
             return Column(
@@ -325,7 +322,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     future: _futureFavorites,
                     builder: (context, favSnapshot) {
                       if (favSnapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator(color: AppColor.yellow,));
+                        return const Center(child: CircularProgressIndicator(color: AppColor.yellow));
                       }
 
                       if (favSnapshot.hasError) {

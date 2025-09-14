@@ -43,7 +43,11 @@ class _UpdateProfileState extends State<UpdateProfile> {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("token");
     if (token == null) throw Exception("No token found");
-    return ProfileService().getProfile(token);
+    final user = await ProfileService().getProfile(token);
+    // تعيين القيم الأولية للـ controllers هنا بدلًا من داخل الـ build
+    _nameController.text = user.name ?? "";
+    _phoneController.text = user.phone ?? "";
+    return user;
   }
 
   @override
@@ -66,11 +70,14 @@ class _UpdateProfileState extends State<UpdateProfile> {
     try {
       final currentUser = await _futureUser;
       final int avaterToSend = selectedAvatarIndex ?? currentUser.avaterId ?? 0;
-      final String nameToSend = _nameController.text.isNotEmpty ? _nameController.text : currentUser.name ?? "";
+      final String nameToSend = _nameController.text; // إرسال الاسم حتى لو فاضي
+      final String phoneToSend = _phoneController.text; // إرسال الموبايل حتى لو فاضي
+      print('Sending data: name: $nameToSend, phone: $phoneToSend, avaterId: $avaterToSend'); // للتصحيح
+
       final message = await ProfileService().updateProfile(
         token: token,
         name: nameToSend,
-        phone: _phoneController.text,
+        phone: phoneToSend,
         avaterId: avaterToSend,
       );
 
@@ -80,12 +87,14 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
       print('Returning data: ${{
         'name': nameToSend,
+        'phone': phoneToSend,
         'avaterId': avaterToSend,
       }}'); // للتصحيح
 
       // Return updated data as a map
       Navigator.pop(context, {
         'name': nameToSend,
+        'phone': phoneToSend,
         'avaterId': avaterToSend,
       });
     } catch (e) {
@@ -181,16 +190,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
         future: _futureUser,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: AppColor.yellow,));
+            return const Center(child: CircularProgressIndicator(color: AppColor.yellow));
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}", style: const TextStyle(color: Colors.white)));
           } else if (!snapshot.hasData) {
             return const Center(child: Text("No user data", style: TextStyle(color: Colors.white)));
           }
-
-          final user = snapshot.data!;
-          _nameController.text = user.name ?? "";
-          _phoneController.text = user.phone ?? "";
 
           return SingleChildScrollView(
             child: Column(
@@ -226,7 +231,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     _showAvatarPicker(context);
                   },
                   child: Image(
-                    image: AssetImage(avatars[selectedAvatarIndex ?? user.avaterId ?? 0]),
+                    image: AssetImage(avatars[selectedAvatarIndex ?? snapshot.data!.avaterId ?? 0]),
                     width: 120,
                     height: 120,
                     fit: BoxFit.cover,
